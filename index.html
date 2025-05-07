@@ -1,0 +1,506 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML preview</title> <link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'VT323', monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+            line-height: 1.6;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px #00ff00 inset, 0 0 20px #00ff00;
+            background-color: rgba(0, 20, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                    0 0 4px #00ff00, 0 0 11px #00ff00, 0 0 19px #00ff00,
+                    0 0 40px #00aa00, 0 0 80px #00aa00, 0 0 90px #00aa00,
+                    0 0 100px #00aa00, 0 0 150px #00aa00;
+                opacity: 1;
+            }
+            20%, 24%, 55% { text-shadow: none; opacity: 0.8; }
+        }
+
+        .section-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-button {
+            background-color: rgba(0, 80, 0, 0.6);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 10px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 1.5em;
+            cursor: pointer;
+            border-radius: 5px;
+            text-shadow: 0 0 3px #00ff00;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .section-button:hover {
+            background-color: rgba(0, 120, 0, 0.8);
+            box-shadow: 0 0 10px #00ff00, 0 0 15px #33ff33;
+        }
+
+        /* Modal (Pop-up Window) Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 50%; /* Initial position for centering with transform */
+            top: 50%;  /* Initial position for centering with transform */
+            transform: translate(-50%, -50%); /* Center the modal initially */
+            width: 90%;
+            max-width: 600px;
+            background-color: #0c0c0c;
+            border: 3px solid #00ff00;
+            border-radius: 8px;
+            box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00 inset;
+            color: #00ff00;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 8px 15px; /* Slightly reduced padding */
+            background-color: rgba(0, 50, 0, 0.85); /* Darker, more opaque header */
+            border-bottom: 2px solid #00ff00;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3em; /* Slightly reduced title size */
+            text-shadow: 0 0 3px #00ff00;
+        }
+
+        .modal-close-button {
+            font-family: 'VT323', monospace; /* Ensure hacky font */
+            font-size: 1.6em; /* Adjust size as needed */
+            color: #ff0000;
+            text-shadow: 0 0 3px #ff0000, 0 0 5px #ff0000; /* More pronounced glow */
+            background: none;
+            border: 1px solid transparent; /* Transparent border for spacing */
+            cursor: pointer;
+            padding: 0 5px;
+            line-height: 1; /* Ensure it aligns well */
+            transition: color 0.2s, text-shadow 0.2s, border-color 0.2s;
+        }
+        .modal-close-button:hover {
+            color: #ff4444; /* Brighter red on hover */
+            text-shadow: 0 0 5px #ff4444, 0 0 8px #ff4444;
+            border-color: #ff0000; /* Add a border on hover for emphasis */
+        }
+
+        .modal-content {
+            padding: 15px;
+            max-height: 65vh; /* Adjusted max height */
+            overflow-y: auto;
+            /* Custom Scrollbar Styling */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: #00ff00 #0a0a0a; /* thumb track - For Firefox */
+        }
+
+        /* Webkit (Chrome, Safari, Edge) scrollbar styling */
+        .modal-content::-webkit-scrollbar {
+            width: 10px; /* Width of the scrollbar */
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #0a0a0a; /* Background of the scrollbar track */
+            border-left: 1px solid #003300; /* Inner border for track */
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background-color: #00ff00; /* Color of the scrollbar thumb */
+            border-radius: 0px; /* Square thumb */
+            border: 1px solid #00aa00; /* Border for the thumb */
+            box-shadow: 0 0 5px #00ff00; /* Glow for the thumb */
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background-color: #33ff33; /* Lighter green on hover */
+             box-shadow: 0 0 8px #33ff33;
+        }
+
+
+        .modal-content ul {
+            list-style-type: none;
+            padding: 0;
+            columns: 1;
+        }
+
+        .modal-content li {
+            margin-bottom: 10px;
+            border-left: 3px solid #00cc00;
+            padding-left: 10px;
+            transition: background-color 0.3s ease, padding-left 0.3s ease;
+            overflow-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .modal-content li:hover {
+            background-color: rgba(0, 50, 0, 0.5);
+            padding-left: 15px;
+        }
+
+        .modal-content a {
+            color: #33ff33;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .modal-content a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff;
+        }
+
+
+        .header-bar, .footer-bar {
+            height: 10px;
+            background: repeating-linear-gradient(45deg, #00ff00, #00ff00 5px, #0a0a0a 5px, #0a0a0a 10px);
+            margin-bottom: 15px;
+            margin-top: 15px;
+        }
+
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(transparent, transparent 2px, rgba(0, 255, 0, 0.05) 3px, rgba(0, 255, 0, 0.05) 4px);
+            z-index: 99999;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 2em; }
+            .section-button { font-size: 1.2em; padding: 8px 15px;}
+            .modal { width: 95%; }
+            .modal-title { font-size: 1.2em; }
+            .modal-content a { font-size: 1em; }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mt-2{margin-top:0.5rem}.p-4{padding:1rem}.text-center{text-align:center}.text-sm{font-size:0.875rem;line-height:1.25rem}@media (min-width: 768px){.md\:p-6{padding:1.5rem}}@media (min-width: 1024px){.lg\:p-8{padding:2rem}}</style></head>
+<body>
+    <div class="scanlines"></div>
+    <div class="container mx-auto p-4 md:p-6 lg:p-8">
+        <div class="text-center mb-2 text-sm">
+            <p id="initMsg">&gt; Initializing Secure Connection... [OK]</p>
+            <p id="bypassMsg">&gt; Bypassing Mainframe Security... [ACCESS GRANTED]</p>
+            <p id="loadMsg">&gt; Loading Resource Index... [DONE]</p>
+        </div>
+
+        <div class="header-bar"></div>
+        <h1>:: Portal Access v2.2 ::</h1> <div class="header-bar"></div>
+
+        <div class="section-buttons">
+            <button class="section-button" data-modal-target="moviesTVModal">:: Movies &amp; TV Shows ::</button>
+            <button class="section-button" data-modal-target="gamesModal">:: Games ::</button>
+            <button class="section-button" data-modal-target="torrentsModal">:: Torrents ::</button>
+        </div>
+
+        <div class="footer-bar"></div>
+        <div class="text-center mt-2 text-sm">
+            <p>&gt; System Status: Online | All Proxies Nominal</p>
+            <p>&gt; Session Logged: NO_TRACE_ACTIVE</p>
+            <p id="disconnectMsg">&gt; Disconnecting...</p>
+        </div>
+    </div>
+
+    <div id="moviesTVModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10079; cursor: move;">
+        <div class="modal-header">
+            <span class="modal-title">:: Movies &amp; TV Shows ::</span>
+            <button class="modal-close-button" data-modal-close="">X</button> </div>
+        <div class="modal-content">
+            <ul>
+                <li><a href="https://soap2night.cc" target="_blank">&gt; soap2night.cc</a></li>
+                <li><a href="https://wmovies.xyz" target="_blank">&gt; wmovies.xyz</a></li>
+                <li><a href="https://goojara.to" target="_blank">&gt; goojara.to</a></li>
+                <li><a href="https://myflixerz.to" target="_blank">&gt; myflixerz.to</a></li>
+                <li><a href="https://hydrahd.ac" target="_blank">&gt; hydrahd.ac</a></li>
+                <li><a href="https://cineby.app" target="_blank">&gt; cineby.app</a></li>
+                <li><a href="https://watch.ug" target="_blank">&gt; watch.ug</a></li>
+                <li><a href="https://mapple.tv" target="_blank">&gt; mapple.tv</a></li>
+                <li><a href="https://popcornmovies.to" target="_blank">&gt; popcornmovies.to</a></li>
+                <li><a href="https://gomovies.sx" target="_blank">&gt; gomovies.sx</a></li>
+                <li><a href="https://onionplay.ch" target="_blank">&gt; onionplay.ch</a></li>
+                <li><a href="https://lookmovie2.to" target="_blank">&gt; lookmovie2.to</a></li>
+                <li><a href="https://pressplay.top" target="_blank">&gt; pressplay.top</a></li>
+                <li><a href="https://moviesjoytv.to" target="_blank">&gt; moviesjoytv.to</a></li>
+                <li><a href="https://fmovies.co" target="_blank">&gt; fmovies.co</a></li>
+                <li><a href="https://soap2dayhd.co" target="_blank">&gt; soap2dayhd.co</a></li>
+                <li><a href="https://projectfreetv.sx" target="_blank">&gt; projectfreetv.sx</a></li>
+                <li><a href="https://sflix.to" target="_blank">&gt; sflix.to</a></li>
+                <li><a href="https://theflixertv.to" target="_blank">&gt; theflixertv.to</a></li>
+                <li><a href="https://hdtoday.tv" target="_blank">&gt; hdtoday.tv</a></li>
+                <li><a href="https://flixhq.to" target="_blank">&gt; flixhq.to</a></li>
+                <li><a href="https://hurawatch.cc" target="_blank">&gt; hurawatch.cc</a></li>
+                <li><a href="https://broflix.si" target="_blank">&gt; broflix.si</a></li>
+                <li><a href="https://ridomovies.tv" target="_blank">&gt; ridomovies.tv</a></li>
+                <li><a href="https://123moviesfree.net" target="_blank">&gt; 123moviesfree.net</a></li>
+                <li><a href="https://hdtoday.cc" target="_blank">&gt; hdtoday.cc</a></li>
+                <li><a href="https://vidplay.org" target="_blank">&gt; vidplay.org</a></li>
+                <li><a href="https://putlocker.pe" target="_blank">&gt; putlocker.pe</a></li>
+                <li><a href="https://gomoviestv.to" target="_blank">&gt; gomoviestv.to</a></li>
+                <li><a href="https://yesmovies.ag" target="_blank">&gt; yesmovies.ag</a></li>
+                <li><a href="https://watchseries.pe" target="_blank">&gt; watchseries.pe</a></li>
+                <li><a href="https://soaper.top" target="_blank">&gt; soaper.top</a></li>
+                <li><a href="https://watch32.sx" target="_blank">&gt; watch32.sx</a></li>
+                <li><a href="https://flickermini.pages.dev" target="_blank">&gt; flickermini.pages.dev</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="gamesModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10077; cursor: move;">
+        <div class="modal-header">
+            <span class="modal-title">:: Games ::</span>
+            <button class="modal-close-button" data-modal-close="">X</button> </div>
+        <div class="modal-content">
+            <ul>
+                <li><a href="https://fitgirl-repacks.site" target="_blank">&gt; fitgirl-repacks.site</a></li>
+                <li><a href="https://dodi-repacks.site" target="_blank">&gt; dodi-repacks.site</a></li>
+                <li><a href="https://ankergames.net" target="_blank">&gt; ankergames.net</a></li>
+                <li><a href="https://g4u.to" target="_blank">&gt; g4u.to</a></li>
+                <li><a href="https://steamrip.com" target="_blank">&gt; steamrip.com</a></li>
+                <li><a href="https://steamgg.net" target="_blank">&gt; steamgg.net</a></li>
+                <li><a href="https://m4ckd0ge-repacks.site" target="_blank">&gt; m4ckd0ge-repacks.site</a></li>
+                <li><a href="https://gload.to" target="_blank">&gt; gload.to</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="torrentsModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10072; cursor: move;">
+        <div class="modal-header">
+            <span class="modal-title">:: Torrents ::</span>
+            <button class="modal-close-button" data-modal-close="">X</button> </div>
+        <div class="modal-content">
+            <ul>
+                <li><a href="https://1337x.to" target="_blank">&gt; 1337x.to</a></li>
+                <li><a href="https://thepiratebay.org" target="_blank">&gt; thepiratebay.org</a></li>
+                <li><a href="https://rutracker.org" target="_blank">&gt; rutracker.org</a></li>
+                <li><a href="https://rargb.to" target="_blank">&gt; rargb.to</a></li>
+                <li><a href="https://limetorrents.lol" target="_blank">&gt; limetorrents.lol</a></li>
+                <li><a href="https://yts.mx" target="_blank">&gt; yts.mx [Movies]</a></li>
+                <li><a href="https://eztvx.to" target="_blank">&gt; eztvx.to [TV Shows]</a></li>
+                <li><a href="https://torrentgalaxy.one" target="_blank">&gt; torrentgalaxy.one</a></li>
+                <li><a href="https://extratorrent.st" target="_blank">&gt; extratorrent.st</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Typing effect for header messages
+        function typeEffect(element, text, callback, speed = 75, initialDelay = 0) {
+            let i = 0;
+            element.textContent = '>';
+            let currentText = '';
+            setTimeout(() => {
+                function type() {
+                    if (i < text.length) {
+                        currentText += text.charAt(i);
+                        element.textContent = '> ' + currentText;
+                        i++;
+                        setTimeout(type, Math.random() * 50 + speed / 2);
+                    } else if (callback) {
+                        callback();
+                    }
+                }
+                type();
+            }, initialDelay);
+        }
+
+        const initMsgEl = document.getElementById('initMsg');
+        const bypassMsgEl = document.getElementById('bypassMsg');
+        const loadMsgEl = document.getElementById('loadMsg');
+
+        if (initMsgEl && bypassMsgEl && loadMsgEl) {
+            const originalInitText = "Initializing Secure Connection...";
+            const originalBypassText = "Bypassing Mainframe Security...";
+            const originalLoadText = "Loading Resource Index...";
+
+            typeEffect(initMsgEl, originalInitText, () => {
+                initMsgEl.textContent += " [OK]";
+                typeEffect(bypassMsgEl, originalBypassText, () => {
+                    bypassMsgEl.textContent += " [ACCESS GRANTED]";
+                    typeEffect(loadMsgEl, originalLoadText, () => {
+                        loadMsgEl.textContent += " [DONE]";
+                    }, 75, 200);
+                }, 75, 200);
+            }, 75, 500);
+        }
+
+        // Console messages
+        console.log("%c:: ACCESS PROTOCOL V2.2 INITIATED ::", "color: #00ff00; font-family: monospace; font-size: 20px; text-shadow: 0 0 5px #00ff00;");
+        console.log("%cWelcome back, Operator. Systems enhanced.", "color: #00dd00; font-family: monospace;");
+        console.log("%cModal interface refined. Scrollbars themed. Drag optimized.", "color: #00aa00; font-family: monospace;");
+        console.log("%cRemember: Leave no trace.", "color: #008800; font-family: monospace; font-style: italic;");
+
+        // Modal Functionality
+        const sectionButtons = document.querySelectorAll('.section-button');
+        const closeButtons = document.querySelectorAll('[data-modal-close]');
+        let activeModal = null;
+        let highestZIndex = 10000; // Keep track of the highest z-index
+
+        sectionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modalId = button.getAttribute('data-modal-target');
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    openModal(modal);
+                }
+            });
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal');
+                if (modal) {
+                    closeModal(modal);
+                }
+            });
+        });
+
+        function openModal(modal) {
+            if (modal == null) return;
+            // No need to close activeModal here, as clicking a new modal will bring it to front
+            // and clicking the same modal (if it were possible through another button) would just re-center it.
+
+            modal.style.display = 'block';
+            // Calculate initial centered position without transform for smoother dragging
+            const modalWidth = modal.offsetWidth;
+            const modalHeight = modal.offsetHeight;
+            modal.style.left = `${(window.innerWidth - modalWidth) / 2}px`;
+            modal.style.top = `${(window.innerHeight - modalHeight) / 2}px`;
+            modal.style.transform = 'none'; // Remove transform before display for accurate offset calculation
+
+            activeModal = modal;
+            highestZIndex++;
+            modal.style.zIndex = highestZIndex;
+        }
+
+        function closeModal(modal) {
+            if (modal == null) return;
+            modal.style.display = 'none';
+            // Reset to initial centered state for next open, if desired
+            modal.style.left = '50%';
+            modal.style.top = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            if (activeModal === modal) {
+                activeModal = null;
+            }
+        }
+
+        // Make Modals Draggable
+        document.querySelectorAll('.modal').forEach(modal => {
+            const header = modal.querySelector('.modal-header');
+            if (!header) return;
+
+            let isDragging = false;
+            let initialX, initialY, offsetX, offsetY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.modal-close-button')) {
+                    return;
+                }
+                isDragging = true;
+                // Store initial mouse position and modal's current position
+                initialX = e.clientX;
+                initialY = e.clientY;
+                offsetX = modal.offsetLeft;
+                offsetY = modal.offsetTop;
+
+                modal.style.cursor = 'grabbing';
+                highestZIndex++; // Increment z-index for the clicked/dragged modal
+                modal.style.zIndex = highestZIndex;
+                // No need to iterate all modals to set z-index here, just bring current to top.
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+
+                // Calculate new position based on mouse movement from initial click
+                let newX = offsetX + (e.clientX - initialX);
+                let newY = offsetY + (e.clientY - initialY);
+
+                // Constrain movement within the viewport
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                const modalWidth = modal.offsetWidth;
+                const modalHeight = modal.offsetHeight;
+
+                if (newX < 0) newX = 0;
+                if (newY < 0) newY = 0;
+                if (newX + modalWidth > viewportWidth) newX = viewportWidth - modalWidth;
+                if (newY + modalHeight > viewportHeight) newY = viewportHeight - modalHeight;
+
+                modal.style.left = `${newX}px`;
+                modal.style.top = `${newY}px`;
+                // Transform is already 'none' from openModal or previous drag
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    modal.style.cursor = 'move';
+                }
+            });
+        });
+
+        // Close modal with Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && activeModal) {
+                closeModal(activeModal);
+            }
+        });
+
+        // Ensure modals are re-centered if window is resized (optional, but good for UX)
+        window.addEventListener('resize', () => {
+            if (activeModal && activeModal.style.display === 'block') {
+                // If not currently being dragged, re-center
+                const header = activeModal.querySelector('.modal-header');
+                if (header && header.style.cursor !== 'grabbing') {
+                     const modalWidth = activeModal.offsetWidth;
+                     const modalHeight = activeModal.offsetHeight;
+                     activeModal.style.left = `${(window.innerWidth - modalWidth) / 2}px`;
+                     activeModal.style.top = `${(window.innerHeight - modalHeight) / 2}px`;
+                }
+            }
+        });
+
+    </script>
+
+
+</body></html>
