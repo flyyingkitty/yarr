@@ -109,8 +109,8 @@
         .modal-close-button {
             font-family: 'VT323', monospace; /* Ensure hacky font */
             font-size: 1.6em; /* Adjust size as needed */
-            color: #ff0000;
-            text-shadow: 0 0 3px #ff0000, 0 0 5px #ff0000; /* More pronounced glow */
+            color: #00ff00; /* CHANGED to green */
+            text-shadow: 0 0 3px #00ff00, 0 0 5px #00ff00; /* CHANGED to green glow */
             background: none;
             border: 1px solid transparent; /* Transparent border for spacing */
             cursor: pointer;
@@ -119,9 +119,9 @@
             transition: color 0.2s, text-shadow 0.2s, border-color 0.2s;
         }
         .modal-close-button:hover {
-            color: #ff4444; /* Brighter red on hover */
-            text-shadow: 0 0 5px #ff4444, 0 0 8px #ff4444;
-            border-color: #ff0000; /* Add a border on hover for emphasis */
+            color: #33ff33; /* CHANGED: Brighter green on hover */
+            text-shadow: 0 0 5px #33ff33, 0 0 8px #33ff33; /* CHANGED to green glow */
+            border-color: #00ff00; /* CHANGED: Add a green border on hover */
         }
 
         .modal-content {
@@ -457,16 +457,16 @@
                 let newX = offsetX + (e.clientX - initialX);
                 let newY = offsetY + (e.clientY - initialY);
 
-                // Constrain movement within the viewport
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-                const modalWidth = modal.offsetWidth;
-                const modalHeight = modal.offsetHeight;
+                // Constrain movement within the viewport - MODIFIED TO ALLOW GOING BEYOND
+                // const viewportWidth = window.innerWidth;
+                // const viewportHeight = window.innerHeight;
+                // const modalWidth = modal.offsetWidth;
+                // const modalHeight = modal.offsetHeight;
 
-                if (newX < 0) newX = 0;
-                if (newY < 0) newY = 0;
-                if (newX + modalWidth > viewportWidth) newX = viewportWidth - modalWidth;
-                if (newY + modalHeight > viewportHeight) newY = viewportHeight - modalHeight;
+                // if (newX < 0) newX = 0; // Removed
+                // if (newY < 0) newY = 0; // Removed
+                // if (newX + modalWidth > viewportWidth) newX = viewportWidth - modalWidth; // Removed
+                // if (newY + modalHeight > viewportHeight) newY = viewportHeight - modalHeight; // Removed
 
                 modal.style.left = `${newX}px`;
                 modal.style.top = `${newY}px`;
@@ -528,11 +528,11 @@
                     let newX = (window.innerWidth - modalWidth) / 2;
                     let newY = (window.innerHeight - modalHeight) / 2;
 
-                    // Ensure it stays within bounds after resize + recenter
-                    if (newX < 0) newX = 0;
-                    if (newY < 0) newY = 0;
-                    if (newX + modalWidth > window.innerWidth) newX = window.innerWidth - modalWidth;
-                    if (newY + modalHeight > window.innerHeight) newY = window.innerHeight - modalHeight;
+                    // Ensure it stays within bounds after resize + recenter - MODIFIED TO ALLOW GOING BEYOND
+                    // if (newX < 0) newX = 0; // Removed
+                    // if (newY < 0) newY = 0; // Removed
+                    // if (newX + modalWidth > window.innerWidth) newX = window.innerWidth - modalWidth; // Removed
+                    // if (newY + modalHeight > window.innerHeight) newY = window.innerHeight - modalHeight; // Removed
 
 
                     // Only re-center if it's not currently being dragged (approximated by checking if it's the active one)
@@ -541,8 +541,13 @@
                     // A common approach is to only recenter if not being dragged.
                     // Since we don't have a perfect "isDragging" state accessible here easily,
                     // we will re-center all visible modals.
+                    // However, since the request is to allow moving beyond screen,
+                    // We should NOT re-center on resize, as it would snap the modal back.
+                    // Commenting out the re-centering on resize for this specific request.
+                    /*
                     modal.style.left = `${newX}px`;
                     modal.style.top = `${newY}px`;
+                    */
                 }
             });
         });
