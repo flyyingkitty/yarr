@@ -6,43 +6,59 @@
     <style>
         body {
             font-family: 'VT323', monospace;
-            background-color: #0a0a0a;
-            color: #00ff00;
-            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+            background-color: #050a14; /* Deep dark blue */
+            color: #90e0ef; /* Light cyan/blue text */
+            text-shadow: 0 0 5px rgba(0, 224, 255, 0.3), 0 0 8px rgba(0, 160, 192, 0.2); /* Subtle cyan glow */
             line-height: 1.6;
             padding: 20px;
             overflow-x: hidden;
             overflow-y: auto;
-            cursor: default; /* Ensure body has a default cursor */
+            cursor: default;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            border: 2px solid #00ff00;
+            border: 2px solid rgba(0, 180, 220, 0.6); /* Cyan border */
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 0 15px #00ff00 inset, 0 0 20px #00ff00;
-            background-color: rgba(0, 20, 0, 0.3);
+            box-shadow: 0 0 15px rgba(0, 224, 255, 0.3) inset, 0 0 25px rgba(0, 180, 220, 0.4); /* Cyan glow */
+            background-color: rgba(10, 20, 45, 0.7); /* Semi-transparent dark blue */
         }
 
         h1 {
             font-size: 2.5em;
             text-align: center;
             margin-bottom: 20px;
-            letter-spacing: 2px;
-            animation: flicker 1.5s infinite alternate;
+            letter-spacing: 3px; /* Increased spacing */
+            color: #ffffff; /* Bright white for base */
+            animation: holographicFlicker 2s infinite alternate;
         }
 
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        @keyframes holographicFlicker {
+            0%, 100% {
                 text-shadow:
-                    0 0 4px #00ff00, 0 0 11px #00ff00, 0 0 19px #00ff00,
-                    0 0 40px #00aa00, 0 0 80px #00aa00, 0 0 90px #00aa00,
-                    0 0 100px #00aa00, 0 0 150px #00aa00;
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 15px #00e0ff, /* Bright Cyan */
+                    0 0 20px #00e0ff,
+                    0 0 25px #00c0dd,
+                    0 0 30px #00a0c0,
+                    0 0 35px #0080a0;
                 opacity: 1;
             }
-            20%, 24%, 55% { text-shadow: none; opacity: 0.8; }
+            50% {
+                text-shadow:
+                    0 0 3px #fff,
+                    0 0 8px #00e0ff,
+                    0 0 12px #00c0dd,
+                    0 0 15px #00a0c0;
+                opacity: 0.85;
+            }
+             10%, 30%, 60%, 80% { /* Glitchy effect */
+                opacity: 0.9;
+                transform: skewX(0.5deg) skewY(-0.2deg) scale(1.01);
+            }
         }
 
         .section-buttons {
@@ -55,21 +71,25 @@
         }
 
         .section-button {
-            background-color: rgba(0, 80, 0, 0.6);
-            border: 2px solid #00ff00;
-            color: #00ff00;
+            background-color: rgba(15, 30, 65, 0.6); /* Semi-transparent blue */
+            border: 2px solid rgba(0, 224, 255, 0.5); /* Cyan border */
+            color: #b0f0ff; /* Light cyan text */
             padding: 10px 20px;
             font-family: 'VT323', monospace;
             font-size: 1.5em;
             cursor: pointer;
             border-radius: 5px;
-            text-shadow: 0 0 3px #00ff00;
-            transition: background-color 0.3s, box-shadow 0.3s;
+            text-shadow: 0 0 5px rgba(0, 224, 255, 0.7), 0 0 8px rgba(0, 224, 255, 0.5); /* Stronger cyan glow */
+            transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s, text-shadow 0.3s;
+            box-shadow: 0 0 5px rgba(0, 224, 255, 0.2);
         }
 
         .section-button:hover {
-            background-color: rgba(0, 120, 0, 0.8);
-            box-shadow: 0 0 10px #00ff00, 0 0 15px #33ff33;
+            background-color: rgba(25, 50, 95, 0.8); /* Brighter blue on hover */
+            border-color: rgba(100, 230, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 224, 255, 0.6), 0 0 20px rgba(100, 230, 255, 0.4); /* Enhanced glow */
+            text-shadow: 0 0 8px #fff, 0 0 12px rgba(0, 224, 255, 0.9);
+            color: #ffffff;
         }
 
         /* Modal (Pop-up Window) Styling */
@@ -77,83 +97,81 @@
             display: none;
             position: fixed;
             z-index: 10000;
-            left: 50%; /* Initial position for centering with transform */
-            top: 50%;  /* Initial position for centering with transform */
-            transform: translate(-50%, -50%); /* Center the modal initially */
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             width: 90%;
             max-width: 600px;
-            background-color: #0c0c0c;
-            border: 3px solid #00ff00;
+            background-color: rgba(10, 25, 55, 0.9); /* Darker, more opaque blue */
+            border: 2px solid rgba(0, 224, 255, 0.7); /* Bright cyan border */
             border-radius: 8px;
-            box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00 inset;
-            color: #00ff00;
+            box-shadow: 0 0 25px rgba(0, 224, 255, 0.5), 0 0 40px rgba(0, 180, 220, 0.3) inset; /* Stronger outer and inner glow */
+            color: #a0e0ef; /* Light cyan text */
             overflow: hidden;
-            cursor: default; /* Ensure modal itself has default cursor */
+            cursor: default;
         }
 
         .modal-header {
-            padding: 8px 15px; /* Slightly reduced padding */
-            background-color: rgba(0, 50, 0, 0.85); /* Darker, more opaque header */
-            border-bottom: 2px solid #00ff00;
-            cursor: default; /* CHANGED: Set cursor to default */
+            padding: 10px 15px; /* Slightly more padding */
+            background-color: rgba(20, 40, 80, 0.85); /* Slightly lighter blue header */
+            border-bottom: 1px solid rgba(0, 224, 255, 0.5); /* Thinner, glowing line */
+            cursor: default;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 224, 255, 0.2); /* Subtle glow under header */
         }
 
         .modal-title {
-            font-size: 1.3em; /* Slightly reduced title size */
-            text-shadow: 0 0 3px #00ff00;
+            font-size: 1.3em;
+            color: #e0f8ff; /* Brighter title */
+            text-shadow: 0 0 5px rgba(0, 224, 255, 0.6), 0 0 8px rgba(0, 224, 255, 0.4);
         }
 
         .modal-close-button {
-            font-family: 'VT323', monospace; /* Ensure hacky font */
-            font-size: 1.6em; /* Adjust size as needed */
-            color: #00ff00; /* CHANGED to green */
-            text-shadow: 0 0 3px #00ff00, 0 0 5px #00ff00; /* CHANGED to green glow */
+            font-family: 'VT323', monospace;
+            font-size: 1.8em; /* Slightly larger */
+            color: #80d0ff; /* Light blue */
+            text-shadow: 0 0 3px rgba(128, 208, 255, 0.7), 0 0 5px rgba(128, 208, 255, 0.5);
             background: none;
-            border: 1px solid transparent; /* Transparent border for spacing */
+            border: 1px solid transparent;
             cursor: pointer;
             padding: 0 5px;
-            line-height: 1; /* Ensure it aligns well */
-            transition: color 0.2s, text-shadow 0.2s, border-color 0.2s;
+            line-height: 1;
+            transition: color 0.2s, text-shadow 0.2s;
         }
         .modal-close-button:hover {
-            color: #33ff33; /* CHANGED: Brighter green on hover */
-            text-shadow: 0 0 5px #33ff33, 0 0 8px #33ff33; /* CHANGED to green glow */
-            border-color: #00ff00; /* CHANGED: Add a green border on hover */
+            color: #ffffff; /* White on hover */
+            text-shadow: 0 0 5px #fff, 0 0 10px rgba(0, 224, 255, 0.8); /* Bright glow */
         }
 
         .modal-content {
             padding: 15px;
-            max-height: 65vh; /* Adjusted max height */
+            max-height: 65vh;
             overflow-y: auto;
-            /* Custom Scrollbar Styling */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: #00ff00 #0a0a0a; /* thumb track - For Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: #00a0c0 #0a1428; /* Cyan thumb, dark blue track */
         }
 
-        /* Webkit (Chrome, Safari, Edge) scrollbar styling */
         .modal-content::-webkit-scrollbar {
-            width: 10px; /* Width of the scrollbar */
+            width: 10px;
         }
 
         .modal-content::-webkit-scrollbar-track {
-            background: #0a0a0a; /* Background of the scrollbar track */
-            border-left: 1px solid #003300; /* Inner border for track */
+            background: rgba(10, 20, 36, 0.8); /* Dark blue track */
+            border-left: 1px solid rgba(0, 100, 120, 0.5);
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-            background-color: #00ff00; /* Color of the scrollbar thumb */
-            border-radius: 0px; /* Square thumb */
-            border: 1px solid #00aa00; /* Border for the thumb */
-            box-shadow: 0 0 5px #00ff00; /* Glow for the thumb */
+            background-color: #00c0dd; /* Cyan scrollbar thumb */
+            border-radius: 2px; /* Slightly rounded */
+            border: 1px solid rgba(0, 160, 192, 0.7);
+            box-shadow: 0 0 5px rgba(0, 224, 255, 0.5); /* Glow for thumb */
         }
         .modal-content::-webkit-scrollbar-thumb:hover {
-            background-color: #33ff33; /* Lighter green on hover */
-             box-shadow: 0 0 8px #33ff33;
+            background-color: #40e0ff; /* Lighter cyan on hover */
+            box-shadow: 0 0 8px rgba(64, 224, 255, 0.7);
         }
-
 
         .modal-content ul {
             list-style-type: none;
@@ -163,20 +181,21 @@
 
         .modal-content li {
             margin-bottom: 10px;
-            border-left: 3px solid #00cc00;
+            border-left: 3px solid rgba(0, 200, 230, 0.7); /* Bright cyan left border */
             padding-left: 10px;
-            transition: background-color 0.3s ease, padding-left 0.3s ease;
+            transition: background-color 0.3s ease, padding-left 0.3s ease, border-left-color 0.3s ease;
             overflow-wrap: break-word;
             word-break: break-all;
         }
 
         .modal-content li:hover {
-            background-color: rgba(0, 50, 0, 0.5);
+            background-color: rgba(20, 45, 90, 0.6); /* Holographic highlight blue */
             padding-left: 15px;
+            border-left-color: rgba(100, 230, 255, 1);
         }
 
         .modal-content a {
-            color: #33ff33;
+            color: #a0e0ff; /* Light blue links */
             text-decoration: none;
             font-size: 1.1em;
             transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -185,22 +204,23 @@
         }
 
         .modal-content a:hover {
-            color: #ffffff;
-            text-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff;
+            color: #ffffff; /* Bright white on hover */
+            text-shadow: 0 0 8px #fff, 0 0 15px rgba(100, 230, 255, 0.8); /* Stronger white/cyan glow */
         }
 
-
         .header-bar, .footer-bar {
-            height: 10px;
-            background: repeating-linear-gradient(45deg, #00ff00, #00ff00 5px, #0a0a0a 5px, #0a0a0a 10px);
-            margin-bottom: 15px;
-            margin-top: 15px;
+            height: 5px; /* Thinner for a sharper line */
+            background: linear-gradient(90deg, transparent, rgba(0, 224, 255, 0.7), transparent); /* Glowing line effect */
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
+            margin-bottom: 20px; /* Adjusted margin */
+            margin-top: 20px;   /* Adjusted margin */
         }
 
         .scanlines {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            background: repeating-linear-gradient(transparent, transparent 2px, rgba(0, 255, 0, 0.05) 3px, rgba(0, 255, 0, 0.05) 4px);
+            background: repeating-linear-gradient(transparent, transparent 1px, rgba(0, 120, 150, 0.08) 2px, rgba(0, 120, 150, 0.08) 3px); /* Finer, cyan scanlines */
             z-index: 99999;
         }
 
@@ -219,15 +239,18 @@
     <div class="scanlines"></div>
     <div class="container mx-auto p-4 md:p-6 lg:p-8">
         <div class="text-center mb-2 text-sm">
+            <!-- Original Text -->
             <p id="initMsg">> Searching for the best movies... [SUCCESS]</p>
             <p id="bypassMsg">> Cracking all of the games... [ACCESS GRANTED]</p>
             <p id="loadMsg">> Loading the torrents... [DONE]</p>
         </div>
 
         <div class="header-bar"></div>
+        <!-- Original Text -->
         <h1>:: YARR v2.2 ::</h1> <div class="header-bar"></div>
 
         <div class="section-buttons">
+            <!-- Original Text -->
             <button class="section-button" data-modal-target="moviesTVModal">:: Movies & TV Shows ::</button>
             <button class="section-button" data-modal-target="gamesModal">:: Games ::</button>
             <button class="section-button" data-modal-target="torrentsModal">:: Torrents ::</button>
@@ -239,6 +262,7 @@
 
         <div class="footer-bar"></div>
         <div class="text-center mt-2 text-sm">
+            <!-- Original Text -->
             <p>> System Status: Online | All Proxies Nominal</p>
             <p>> Session Logged: NO_TRACE_ACTIVE</p>
             <p id="disconnectMsg">> Finding you the best Pirating Websites by gelytee...</p>
@@ -247,6 +271,7 @@
 
     <div id="moviesTVModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10079;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: Movies & TV Shows ::</span>
             <button class="modal-close-button" data-modal-close="">X</button> </div>
         <div class="modal-content">
@@ -291,6 +316,7 @@
 
     <div id="gamesModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10077;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: Games ::</span>
             <button class="modal-close-button" data-modal-close="">X</button> </div>
         <div class="modal-content">
@@ -310,6 +336,7 @@
 
     <div id="torrentsModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10072;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: Torrents ::</span>
             <button class="modal-close-button" data-modal-close="">X</button> </div>
         <div class="modal-content">
@@ -330,11 +357,13 @@
 
     <div id="ytDownloadersModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10070;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: YT mp4 / mp3 Downloaders ::</span>
             <button class="modal-close-button" data-modal-close="">X</button>
         </div>
         <div class="modal-content">
             <ul>
+                <!-- Original Text -->
                 <li><a href="https://cobalt.tools/" target="_blank">> cobalt.tools [YT Multi-Downloader]</a></li>
                 <li><a href="https://ezmp3.cc/" target="_blank">> ezmp3.cc [YT to MP3]</a></li>
             </ul>
@@ -343,11 +372,13 @@
 
     <div id="utilitiesModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10068;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: Utilities ::</span>
             <button class="modal-close-button" data-modal-close="">X</button>
         </div>
         <div class="modal-content">
             <ul>
+                <!-- Original Text -->
                 <li><a href="https://massgrave.dev/genuine-installation-media" target="_blank">> massgrave.dev [Windows/Office Media]</a></li>
             </ul>
         </div>
@@ -355,6 +386,7 @@
 
     <div id="vpnModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10066;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: VPN's ::</span>
             <button class="modal-close-button" data-modal-close="">X</button>
         </div>
@@ -372,6 +404,7 @@
 
     <div id="adBlockersModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10064;">
         <div class="modal-header">
+            <!-- Original Text -->
             <span class="modal-title">:: AdBlockers ::</span>
             <button class="modal-close-button" data-modal-close="">X</button>
         </div>
@@ -413,14 +446,24 @@
         const loadMsgEl = document.getElementById('loadMsg');
 
         if (initMsgEl && bypassMsgEl && loadMsgEl) {
+            // Original Text for JS typing effect
             const originalInitText = "Searching for the best movies...";
             const originalBypassText = "Cracking all of the games...";
             const originalLoadText = "Loading the torrents...";
 
             typeEffect(initMsgEl, originalInitText, () => {
+                // Original Suffixes
                 initMsgEl.textContent += " [SUCCESS]";
                 typeEffect(bypassMsgEl, originalBypassText, () => {
-                    bypassMsgEl.textContent += " [CRACKED]";
+                    // Adjusted the "CRACKED" to match the original "ACCESS GRANTED" behavior,
+                    // but the original JS actually set it to "CRACKED".
+                    // To strictly follow the *first file's* text, we'd use "[ACCESS GRANTED]"
+                    // However, the original JS had `bypassMsgEl.textContent += " [CRACKED]";`
+                    // For consistency with the *first file's JS behavior* I'll use CRACKED.
+                    // If you meant the visual text "ACCESS GRANTED" from the first file's HTML, let me know.
+                    // For now, matching the first file's JS output which was "Cracking all of the games... [CRACKED]"
+                    bypassMsgEl.textContent += " [CRACKED]"; // This was the JS behavior in the first file.
+                                                            // If you meant the visual text from the HTML, change to " [ACCESS GRANTED]"
                     typeEffect(loadMsgEl, originalLoadText, () => {
                         loadMsgEl.textContent += " [DONE]";
                     }, 75, 200);
@@ -428,17 +471,18 @@
             }, 75, 500);
         }
 
-        // Console messages
-        console.log("%c:: ACCESS PROTOCOL V2.2 INITIATED ::", "color: #00ff00; font-family: monospace; font-size: 20px; text-shadow: 0 0 5px #00ff00;");
-        console.log("%cWelcome back, Operator. Systems enhanced.", "color: #00dd00; font-family: monospace;");
-        console.log("%cModal interface refined. Scrollbars themed. Drag optimized.", "color: #00aa00; font-family: monospace;");
-        console.log("%cRemember: Leave no trace.", "color: #008800; font-family: monospace; font-style: italic;");
+        // Console messages (reverted to original from first file, but styled for hologram)
+        console.log("%c:: ACCESS PROTOCOL V2.2 INITIATED ::", "color: #00e0ff; font-family: monospace; font-size: 20px; text-shadow: 0 0 5px #00e0ff, 0 0 10px #00a0c0;");
+        console.log("%cWelcome back, Operator. Systems enhanced.", "color: #80d0ff; font-family: monospace;");
+        console.log("%cModal interface refined. Scrollbars themed. Drag optimized.", "color: #40c0e0; font-family: monospace;");
+        console.log("%cRemember: Leave no trace.", "color: #0080a0; font-family: monospace; font-style: italic;");
 
-        // Modal Functionality
+
+        // Modal Functionality (unchanged from original, except for console log messages above)
         const sectionButtons = document.querySelectorAll('.section-button');
         const closeButtons = document.querySelectorAll('[data-modal-close]');
         let activeModal = null;
-        let highestZIndex = 10000; // Keep track of the highest z-index
+        let highestZIndex = 10000; 
 
         sectionButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -461,16 +505,13 @@
 
         function openModal(modal) {
             if (modal == null) return;
-            // No need to close activeModal here, as clicking a new modal will bring it to front
-            // and clicking the same modal (if it were possible through another button) would just re-center it.
-
+            
             modal.style.display = 'block';
-            // Calculate initial centered position without transform for smoother dragging
             const modalWidth = modal.offsetWidth;
             const modalHeight = modal.offsetHeight;
             modal.style.left = `${(window.innerWidth - modalWidth) / 2}px`;
             modal.style.top = `${(window.innerHeight - modalHeight) / 2}px`;
-            modal.style.transform = 'none'; // Remove transform before display for accurate offset calculation
+            modal.style.transform = 'none'; 
 
             activeModal = modal;
             highestZIndex++;
@@ -480,7 +521,6 @@
         function closeModal(modal) {
             if (modal == null) return;
             modal.style.display = 'none';
-            // Reset to initial centered state for next open, if desired
             modal.style.left = '50%';
             modal.style.top = '50%';
             modal.style.transform = 'translate(-50%, -50%)';
@@ -489,7 +529,6 @@
             }
         }
 
-        // Make Modals Draggable
         document.querySelectorAll('.modal').forEach(modal => {
             const header = modal.querySelector('.modal-header');
             if (!header) return;
@@ -499,117 +538,63 @@
 
             header.addEventListener('mousedown', (e) => {
                 if (e.target.closest('.modal-close-button')) {
-                    return; // Do not drag if clicking the close button
+                    return; 
                 }
                 isDragging = true;
-                // Store initial mouse position and modal's current position
                 initialX = e.clientX;
                 initialY = e.clientY;
                 offsetX = modal.offsetLeft;
                 offsetY = modal.offsetTop;
 
-                // modal.style.cursor = 'grabbing'; // REMOVED: No cursor change on mousedown
-                highestZIndex++; // Increment z-index for the clicked/dragged modal
+                highestZIndex++; 
                 modal.style.zIndex = highestZIndex;
-                // No need to iterate all modals to set z-index here, just bring current to top.
             });
 
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                e.preventDefault(); // Prevent text selection while dragging
+                e.preventDefault(); 
 
-                // Calculate new position based on mouse movement from initial click
                 let newX = offsetX + (e.clientX - initialX);
                 let newY = offsetY + (e.clientY - initialY);
 
-                // Constrain movement within the viewport - MODIFIED TO ALLOW GOING BEYOND
-                // const viewportWidth = window.innerWidth;
-                // const viewportHeight = window.innerHeight;
-                // const modalWidth = modal.offsetWidth;
-                // const modalHeight = modal.offsetHeight;
-
-                // if (newX < 0) newX = 0; // Removed
-                // if (newY < 0) newY = 0; // Removed
-                // if (newX + modalWidth > viewportWidth) newX = viewportWidth - modalWidth; // Removed
-                // if (newY + modalHeight > viewportHeight) newY = viewportHeight - modalHeight; // Removed
-
                 modal.style.left = `${newX}px`;
                 modal.style.top = `${newY}px`;
-                // Transform is already 'none' from openModal or previous drag
             });
 
             document.addEventListener('mouseup', () => {
                 if (isDragging) {
                     isDragging = false;
-                    // modal.style.cursor = 'move'; // REMOVED: No cursor change on mouseup, rely on CSS
-                                                // Or set to default explicitly if needed:
-                    // modal.style.cursor = 'default'; // This would override the header's CSS cursor if it was different
                 }
             });
 
-             // Set cursor back to default for the header if mouse leaves it while not dragging
             header.addEventListener('mouseleave', () => {
                 if (!isDragging) {
-                    // header.style.cursor = 'default'; // This is already handled by CSS on .modal-header
+                    // CSS handles cursor
                 }
             });
-             // Redundant if CSS on .modal-header is 'default'
             header.addEventListener('mouseenter', () => {
                 if (!isDragging) {
-                     // header.style.cursor = 'default'; // This is already handled by CSS on .modal-header
+                    // CSS handles cursor
                 }
             });
         });
 
-        // Close modal with Escape key
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && activeModal) {
                 closeModal(activeModal);
             }
         });
 
-        // Ensure modals are re-centered if window is resized (optional, but good for UX)
         window.addEventListener('resize', () => {
             document.querySelectorAll('.modal').forEach(modal => {
                 if (modal.style.display === 'block') {
-                    // Check if the modal is currently being dragged.
-                    // We can infer this by checking if the header has a 'grabbing' cursor,
-                    // but since we removed that, we'll check if its specific drag flag is active.
-                    // However, the drag flag `isDragging` is local to the mousedown scope.
-                    // A simple way is to just re-center if it's not being actively manipulated,
-                    // or always re-center/re-constrain its position.
-                    // For now, let's re-center if it's the activeModal and not being grabbed
-                    // (though grabbing check is removed, the principle remains).
-
-                    const header = modal.querySelector('.modal-header');
-                    // A more robust check for "is being dragged" would require a global flag or attribute on the modal.
-                    // For simplicity, we'll re-center if it's visible.
-                    // If you want to avoid re-centering during an active drag on resize,
-                    // you'd need to set a flag like `modal.dataset.isDragging = true` on mousedown
-                    // and `false` on mouseup, then check it here.
-
+                    // No re-centering on resize to allow modals to be moved off-screen
+                    // and stay there if the user intended.
+                    /*
                     const modalWidth = modal.offsetWidth;
                     const modalHeight = modal.offsetHeight;
                     let newX = (window.innerWidth - modalWidth) / 2;
                     let newY = (window.innerHeight - modalHeight) / 2;
-
-                    // Ensure it stays within bounds after resize + recenter - MODIFIED TO ALLOW GOING BEYOND
-                    // if (newX < 0) newX = 0; // Removed
-                    // if (newY < 0) newY = 0; // Removed
-                    // if (newX + modalWidth > window.innerWidth) newX = window.innerWidth - modalWidth; // Removed
-                    // if (newY + modalHeight > window.innerHeight) newY = window.innerHeight - modalHeight; // Removed
-
-
-                    // Only re-center if it's not currently being dragged (approximated by checking if it's the active one)
-                    // and its position is not being actively set by the mousemove event.
-                    // This resize logic might still conflict slightly with an ongoing drag.
-                    // A common approach is to only recenter if not being dragged.
-                    // Since we don't have a perfect "isDragging" state accessible here easily,
-                    // we will re-center all visible modals.
-                    // However, since the request is to allow moving beyond screen,
-                    // We should NOT re-center on resize, as it would snap the modal back.
-                    // Commenting out the re-centering on resize for this specific request.
-                    /*
                     modal.style.left = `${newX}px`;
                     modal.style.top = `${newY}px`;
                     */
