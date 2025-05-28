@@ -6,23 +6,22 @@
     <title>SECURE ACCESS TERMINAL</title>
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif; /* Standard sans-serif */
-            background-color: #e0e0e0; /* Light grey, typical old UI */
-            color: #000000; /* Black text */
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #e0e0e0;
+            color: #000000;
             margin: 0;
             padding: 10px;
             line-height: 1.5;
-            font-size: 14px; /* Standard readable size */
+            font-size: 14px;
         }
 
-        /* Initial Password Overlay */
         .password-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #c0c0c0; /* Solid grey overlay */
+            background-color: #c0c0c0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,23 +54,23 @@
             border: 1px solid #333333;
             background-color: #ffffff;
             color: #000000;
-            font-family: monospace; /* System monospace */
+            font-family: monospace;
             font-size: 1em;
             width: 250px;
-            box-shadow: inset 1px 1px 2px #888; /* Simple inset shadow */
+            box-shadow: inset 1px 1px 2px #888;
         }
         .password-overlay input[type="password"]:focus,
         .password-modal input[type="password"]:focus {
-            outline: 1px solid #000080; /* Simple outline */
-            background-color: #f0f8ff; /* Light blue on focus */
+            outline: 1px solid #000080;
+            background-color: #f0f8ff;
         }
 
         .password-overlay button,
         .password-modal button {
             padding: 8px 15px;
-            background-color: #b0b0b0; /* Grey button */
+            background-color: #b0b0b0;
             color: #000000;
-            border: 1px outset #808080; /* Classic button border */
+            border: 1px outset #808080;
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
@@ -87,31 +86,30 @@
 
 
         .password-error {
-            color: #cc0000; /* Standard red */
+            color: #cc0000;
             margin-top: 10px;
             font-size: 0.9em;
             font-weight: bold;
         }
 
-        /* Main Content Area */
         .main-content {
             display: none;
             padding: 15px;
-            max-width: 800px; /* Slightly narrower for older feel */
+            max-width: 800px;
             margin: 20px auto;
-            border: 2px solid #000000; /* Stark black border */
-            background-color: #f0f0f0; /* Lighter grey for content */
+            border: 2px solid #000000;
+            background-color: #f0f0f0;
         }
 
         .classification-header {
-            background-color: #800000; /* Dark red */
+            background-color: #800000;
             color: #ffffff;
             padding: 5px 10px;
             font-weight: bold;
             text-align: center;
             font-size: 1.1em;
             letter-spacing: 1px;
-            margin: -15px -15px 20px -15px; /* Full width header */
+            margin: -15px -15px 20px -15px;
             border-bottom: 2px solid #000000;
             font-family: "Courier New", Courier, monospace;
         }
@@ -153,7 +151,7 @@
         }
         .message-body ul {
             padding-left: 20px;
-            list-style-type: square; /* More basic list style */
+            list-style-type: square;
         }
         .message-body ol {
             padding-left: 25px;
@@ -163,7 +161,7 @@
             margin-top: 25px;
             padding-top: 15px;
             border-top: 1px solid #808080;
-            text-align: left; /* Buttons aligned left */
+            text-align: left;
         }
         .action-buttons-container button.action-btn {
             background-color: #d3d3d3;
@@ -173,14 +171,13 @@
             margin: 5px 5px 5px 0;
             cursor: pointer;
             font-size: 0.85em;
-            text-transform: none; /* No uppercase */
+            text-transform: none;
             font-weight: normal;
         }
         .action-buttons-container button.action-btn:hover {
             background-color: #c0c0c0;
         }
 
-        /* Password Modal for Action Buttons */
         .password-modal {
             display: none;
             position: fixed;
@@ -188,7 +185,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(128, 128, 128, 0.7); /* Semi-transparent grey */
+            background-color: rgba(128, 128, 128, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 900;
@@ -201,7 +198,7 @@
             border: 2px solid #000000;
             text-align: center;
             position: relative;
-            width: 400px; /* Fixed width modal */
+            width: 400px;
         }
         .close-modal-btn {
             position: absolute;
@@ -219,8 +216,6 @@
             color: #cc0000;
         }
 
-
-        /* Hidden Info Sections */
         .info-section {
             display: none;
             margin-top: 20px;
@@ -229,7 +224,7 @@
             background-color: #e8e8e8;
         }
         .info-section h4 {
-            color: #000080; /* Dark blue for sub-headers */
+            color: #000080;
             margin-top: 0;
             border-bottom: 1px solid #000080;
             padding-bottom: 5px;
@@ -240,7 +235,7 @@
         .info-section pre {
             white-space: pre-wrap;
             word-wrap: break-word;
-            background-color: #f8f8f8; /* Very light grey for pre */
+            background-color: #f8f8f8;
             padding: 8px;
             border: 1px solid #808080;
             max-height: 180px;
@@ -265,18 +260,16 @@
             font-weight: bold;
         }
 
-        /* Utility */
         .text-red { color: #b30000; font-weight: bold; }
         .text-yellow { color: #996600; font-weight: bold; }
         .text-green { color: #006400; font-weight: bold; }
 
-        /* START OF NEW CSS - DO NOT MODIFY CSS ABOVE THIS LINE */
         .agreement-container {
             margin-top: 15px;
-            margin-bottom: 10px; /* Space before submit button */
+            margin-bottom: 10px;
             font-size: 0.85em;
             text-align: left;
-            width: 270px; /* To roughly match password input width + some margin */
+            width: 270px;
         }
         .agreement-container input[type="checkbox"] {
             margin-right: 5px;
@@ -286,7 +279,7 @@
             vertical-align: middle;
         }
         .view-agreement-link {
-            color: #000080; /* Dark blue link */
+            color: #000080;
             text-decoration: underline;
             cursor: pointer;
             font-size: 0.9em;
@@ -297,16 +290,16 @@
         }
 
         .legal-terms-modal-overlay {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(100, 100, 100, 0.6); /* Semi-transparent darker grey */
+            background-color: rgba(100, 100, 100, 0.6);
             justify-content: center;
             align-items: center;
-            z-index: 1001; /* Above password overlay */
+            z-index: 1001;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -336,7 +329,7 @@
             border: 1px solid #808080;
             padding: 10px;
             background-color: #ffffff;
-            font-family: "Times New Roman", Times, serif; /* More formal/legal font */
+            font-family: "Times New Roman", Times, serif;
             font-size: 0.9em;
             line-height: 1.4;
             margin-bottom: 15px;
@@ -353,7 +346,6 @@
         .legal-terms-modal-content button:hover {
             background-color: #a0a0a0;
         }
-        /* END OF NEW CSS - DO NOT MODIFY CSS BELOW THIS LINE */
 
     </style>
 </head>
@@ -364,14 +356,12 @@
         <p style="color: #333; margin-bottom:15px; text-align:center; font-size:0.9em;">Enter Authentication Code.</p>
         <input type="password" id="initialPasswordInput" placeholder="CODE">
         
-        <!-- START OF NEW HTML - DO NOT MODIFY HTML OUTSIDE THIS BLOCK -->
         <div class="agreement-container">
             <input type="checkbox" id="agreementCheckbox">
             <label for="agreementCheckbox">I acknowledge and agree to the
                 <span class="view-agreement-link" id="viewAgreementBtn">terms of use</span>.
             </label>
         </div>
-        <!-- END OF NEW HTML -->
 
         <button onclick="checkInitialPassword()" id="initialSubmitButton">SUBMIT</button>
         <p class="password-error" id="initialPasswordError"></p>
@@ -428,7 +418,6 @@
             <button class="action-btn" data-infoid="decemberDirective">View Directive 07-ALPHA</button>
         </div>
 
-        <!-- Hidden Info Sections -->
         <div class="info-section" id="info-xr73Analysis">
             <h4>Tech Annex 1A: XA-441B Material Scan (Summary)</h4>
             <p>Stand-off Spectroscopic Analysis (SSA) of XA-441B outer hull:</p>
@@ -516,7 +505,6 @@ DTG: 210215Z JUL 24
         <div class="classification-header bottom">TOP SECRET // SI-GAMMA // EYES ONLY</div>
     </div>
 
-    <!-- Password Modal for Action Buttons -->
     <div class="password-modal" id="actionPasswordModal">
         <div class="password-modal-content">
             <button class="close-modal-btn" onclick="closeActionPasswordModal()">X</button>
@@ -528,7 +516,6 @@ DTG: 210215Z JUL 24
         </div>
     </div>
 
-    <!-- START OF NEW HTML - DO NOT MODIFY HTML OUTSIDE THIS BLOCK -->
     <div class="legal-terms-modal-overlay" id="legalTermsModal">
         <div class="legal-terms-modal-content">
             <h3>TERMS OF SYSTEM ACCESS & DATA HANDLING</h3>
@@ -549,11 +536,10 @@ DTG: 210215Z JUL 24
             <button id="closeLegalTermsBtn">CLOSE</button>
         </div>
     </div>
-    <!-- END OF NEW HTML -->
 
 
     <script>
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB');
 
         const initialPasswordOverlay = document.getElementById('initialPasswordOverlay');
         const initialPasswordInput = document.getElementById('initialPasswordInput');
@@ -567,12 +553,10 @@ DTG: 210215Z JUL 24
         let currentInfoSectionId = null;
 
         function checkInitialPassword() {
-            // START OF MODIFIED JS - DO NOT MODIFY JS OUTSIDE THIS FUNCTION (unless it's the new event listeners below)
             if (!document.getElementById('agreementCheckbox').checked) {
                 initialPasswordError.textContent = 'YOU MUST AGREE TO THE TERMS OF USE.';
                 return;
             }
-            // END OF MODIFIED JS
 
             if (initialPasswordInput.value === "sacred") {
                 initialPasswordOverlay.style.display = 'none';
@@ -631,16 +615,14 @@ DTG: 210215Z JUL 24
             }
         });
 
-        // START OF NEW JAVASCRIPT - DO NOT MODIFY JS ABOVE THIS LINE (except the one line in checkInitialPassword)
         const agreementCheckbox = document.getElementById('agreementCheckbox');
         const initialSubmitButton = document.getElementById('initialSubmitButton');
         const viewAgreementBtn = document.getElementById('viewAgreementBtn');
         const legalTermsModal = document.getElementById('legalTermsModal');
         const closeLegalTermsBtn = document.getElementById('closeLegalTermsBtn');
 
-        // Initially disable submit button
         initialSubmitButton.disabled = true;
-        initialSubmitButton.style.backgroundColor = '#d0d0d0'; // Visually indicate disabled
+        initialSubmitButton.style.backgroundColor = '#d0d0d0';
         initialSubmitButton.style.cursor = 'not-allowed';
 
 
@@ -649,7 +631,7 @@ DTG: 210215Z JUL 24
                 initialSubmitButton.disabled = false;
                 initialSubmitButton.style.backgroundColor = '#b0b0b0';
                 initialSubmitButton.style.cursor = 'pointer';
-                initialPasswordError.textContent = ''; // Clear previous error if agreement was the issue
+                initialPasswordError.textContent = '';
             } else {
                 initialSubmitButton.disabled = true;
                 initialSubmitButton.style.backgroundColor = '#d0d0d0';
@@ -658,7 +640,7 @@ DTG: 210215Z JUL 24
         });
 
         viewAgreementBtn.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent any default span action
+            event.preventDefault();
             legalTermsModal.style.display = 'flex';
         });
 
@@ -666,13 +648,11 @@ DTG: 210215Z JUL 24
             legalTermsModal.style.display = 'none';
         });
         
-        // Close modal if clicking outside the content (on the overlay)
         legalTermsModal.addEventListener('click', function(event) {
             if (event.target === legalTermsModal) {
                 legalTermsModal.style.display = 'none';
             }
         });
-        // END OF NEW JAVASCRIPT
     </script>
 
 </body>
