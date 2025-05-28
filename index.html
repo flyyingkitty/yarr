@@ -1,608 +1,511 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML preview</title> <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>SECURE ACCESS TERMINAL</title>
     <style>
         body {
-            font-family: 'VT323', monospace;
-            background-color: #050a14; /* Deep dark blue */
-            color: #90e0ef; /* Light cyan/blue text */
-            text-shadow: 0 0 5px rgba(0, 224, 255, 0.3), 0 0 8px rgba(0, 160, 192, 0.2); /* Subtle cyan glow */
-            line-height: 1.6;
-            padding: 20px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            cursor: default;
+            font-family: Arial, Helvetica, sans-serif; /* Standard sans-serif */
+            background-color: #e0e0e0; /* Light grey, typical old UI */
+            color: #000000; /* Black text */
+            margin: 0;
+            padding: 10px;
+            line-height: 1.5;
+            font-size: 14px; /* Standard readable size */
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            border: 2px solid rgba(0, 180, 220, 0.6); /* Cyan border */
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0, 224, 255, 0.3) inset, 0 0 25px rgba(0, 180, 220, 0.4); /* Cyan glow */
-            background-color: rgba(10, 20, 45, 0.7); /* Semi-transparent dark blue */
-        }
-
-        h1 {
-            font-size: 2.5em;
-            text-align: center;
-            margin-bottom: 20px;
-            letter-spacing: 3px; /* Increased spacing */
-            color: #ffffff; /* Bright white for base */
-            animation: holographicFlicker 2s infinite alternate;
-        }
-
-        @keyframes holographicFlicker {
-            0%, 100% {
-                text-shadow:
-                    0 0 5px #fff,
-                    0 0 10px #fff,
-                    0 0 15px #00e0ff, /* Bright Cyan */
-                    0 0 20px #00e0ff,
-                    0 0 25px #00c0dd,
-                    0 0 30px #00a0c0,
-                    0 0 35px #0080a0;
-                opacity: 1;
-            }
-            50% {
-                text-shadow:
-                    0 0 3px #fff,
-                    0 0 8px #00e0ff,
-                    0 0 12px #00c0dd,
-                    0 0 15px #00a0c0;
-                opacity: 0.85;
-            }
-             10%, 30%, 60%, 80% { /* Glitchy effect */
-                opacity: 0.9;
-                transform: skewX(0.5deg) skewY(-0.2deg) scale(1.01);
-            }
-        }
-
-        .section-buttons {
+        /* Initial Password Overlay */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #c0c0c0; /* Solid grey overlay */
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 5px solid #808080;
         }
 
-        .section-button {
-            background-color: rgba(15, 30, 65, 0.6); /* Semi-transparent blue */
-            border: 2px solid rgba(0, 224, 255, 0.5); /* Cyan border */
-            color: #b0f0ff; /* Light cyan text */
-            padding: 10px 20px;
-            font-family: 'VT323', monospace;
-            font-size: 1.5em;
+        .password-overlay h2,
+        .password-modal-content h3 {
+            color: #000000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .password-modal-content h3 {
+             font-size: 1.1em;
+        }
+
+
+        .password-overlay input[type="password"],
+        .password-modal input[type="password"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #333333;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: monospace; /* System monospace */
+            font-size: 1em;
+            width: 250px;
+            box-shadow: inset 1px 1px 2px #888; /* Simple inset shadow */
+        }
+        .password-overlay input[type="password"]:focus,
+        .password-modal input[type="password"]:focus {
+            outline: 1px solid #000080; /* Simple outline */
+            background-color: #f0f8ff; /* Light blue on focus */
+        }
+
+        .password-overlay button,
+        .password-modal button {
+            padding: 8px 15px;
+            background-color: #b0b0b0; /* Grey button */
+            color: #000000;
+            border: 1px outset #808080; /* Classic button border */
             cursor: pointer;
-            border-radius: 5px;
-            text-shadow: 0 0 5px rgba(0, 224, 255, 0.7), 0 0 8px rgba(0, 224, 255, 0.5); /* Stronger cyan glow */
-            transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s, text-shadow 0.3s;
-            box-shadow: 0 0 5px rgba(0, 224, 255, 0.2);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .password-overlay button:hover,
+        .password-modal button:hover {
+            background-color: #a0a0a0;
+        }
+        .password-overlay button:active,
+        .password-modal button:active {
+            border-style: inset;
         }
 
-        .section-button:hover {
-            background-color: rgba(25, 50, 95, 0.8); /* Brighter blue on hover */
-            border-color: rgba(100, 230, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 224, 255, 0.6), 0 0 20px rgba(100, 230, 255, 0.4); /* Enhanced glow */
-            text-shadow: 0 0 8px #fff, 0 0 12px rgba(0, 224, 255, 0.9);
+
+        .password-error {
+            color: #cc0000; /* Standard red */
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: none;
+            padding: 15px;
+            max-width: 800px; /* Slightly narrower for older feel */
+            margin: 20px auto;
+            border: 2px solid #000000; /* Stark black border */
+            background-color: #f0f0f0; /* Lighter grey for content */
+        }
+
+        .classification-header {
+            background-color: #800000; /* Dark red */
             color: #ffffff;
+            padding: 5px 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            margin: -15px -15px 20px -15px; /* Full width header */
+            border-bottom: 2px solid #000000;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .classification-header.bottom {
+            margin: 20px -15px -15px -15px;
+            border-top: 2px solid #000000;
+            border-bottom: none;
         }
 
-        /* Modal (Pop-up Window) Styling */
-        .modal {
+        .document-header {
+            border-bottom: 1px solid #808080;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9em;
+        }
+        .document-header p {
+            margin: 4px 0;
+        }
+        .document-header strong {
+            display: inline-block;
+            width: 100px; 
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .message-body h3 {
+            color: #000000;
+            border-bottom: 1px solid #808080;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .message-body p, .message-body ul, .message-body ol {
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        .message-body ul {
+            padding-left: 20px;
+            list-style-type: square; /* More basic list style */
+        }
+        .message-body ol {
+            padding-left: 25px;
+        }
+
+        .action-buttons-container {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #808080;
+            text-align: left; /* Buttons aligned left */
+        }
+        .action-buttons-container button.action-btn {
+            background-color: #d3d3d3;
+            color: #000000;
+            border: 1px solid #505050;
+            padding: 6px 10px;
+            margin: 5px 5px 5px 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            text-transform: none; /* No uppercase */
+            font-weight: normal;
+        }
+        .action-buttons-container button.action-btn:hover {
+            background-color: #c0c0c0;
+        }
+
+        /* Password Modal for Action Buttons */
+        .password-modal {
             display: none;
             position: fixed;
-            z-index: 10000;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 600px;
-            background-color: rgba(10, 25, 55, 0.9); /* Darker, more opaque blue */
-            border: 2px solid rgba(0, 224, 255, 0.7); /* Bright cyan border */
-            border-radius: 8px;
-            box-shadow: 0 0 25px rgba(0, 224, 255, 0.5), 0 0 40px rgba(0, 180, 220, 0.3) inset; /* Stronger outer and inner glow */
-            color: #a0e0ef; /* Light cyan text */
-            overflow: hidden;
-            cursor: default;
-        }
-
-        .modal-header {
-            padding: 10px 15px; /* Slightly more padding */
-            background-color: rgba(20, 40, 80, 0.85); /* Slightly lighter blue header */
-            border-bottom: 1px solid rgba(0, 224, 255, 0.5); /* Thinner, glowing line */
-            cursor: default;
-            display: flex;
-            justify-content: space-between;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(128, 128, 128, 0.7); /* Semi-transparent grey */
+            justify-content: center;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 224, 255, 0.2); /* Subtle glow under header */
+            z-index: 900;
+            padding: 20px;
+            box-sizing: border-box;
         }
-
-        .modal-title {
-            font-size: 1.3em;
-            color: #e0f8ff; /* Brighter title */
-            text-shadow: 0 0 5px rgba(0, 224, 255, 0.6), 0 0 8px rgba(0, 224, 255, 0.4);
+        .password-modal-content {
+            background-color: #e0e0e0;
+            padding: 20px;
+            border: 2px solid #000000;
+            text-align: center;
+            position: relative;
+            width: 400px; /* Fixed width modal */
         }
-
-        .modal-close-button {
-            font-family: 'VT323', monospace;
-            font-size: 1.8em; /* Slightly larger */
-            color: #80d0ff; /* Light blue */
-            text-shadow: 0 0 3px rgba(128, 208, 255, 0.7), 0 0 5px rgba(128, 208, 255, 0.5);
+        .close-modal-btn {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 1.2em;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            color: #000000;
             background: none;
-            border: 1px solid transparent;
-            cursor: pointer;
-            padding: 0 5px;
-            line-height: 1;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-        .modal-close-button:hover {
-            color: #ffffff; /* White on hover */
-            text-shadow: 0 0 5px #fff, 0 0 10px rgba(0, 224, 255, 0.8); /* Bright glow */
-        }
-
-        .modal-content {
-            padding: 15px;
-            max-height: 65vh;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #00a0c0 #0a1428; /* Cyan thumb, dark blue track */
-        }
-
-        .modal-content::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .modal-content::-webkit-scrollbar-track {
-            background: rgba(10, 20, 36, 0.8); /* Dark blue track */
-            border-left: 1px solid rgba(0, 100, 120, 0.5);
-        }
-
-        .modal-content::-webkit-scrollbar-thumb {
-            background-color: #00c0dd; /* Cyan scrollbar thumb */
-            border-radius: 2px; /* Slightly rounded */
-            border: 1px solid rgba(0, 160, 192, 0.7);
-            box-shadow: 0 0 5px rgba(0, 224, 255, 0.5); /* Glow for thumb */
-        }
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            background-color: #40e0ff; /* Lighter cyan on hover */
-            box-shadow: 0 0 8px rgba(64, 224, 255, 0.7);
-        }
-
-        .modal-content ul {
-            list-style-type: none;
-            padding: 0;
-            columns: 1;
-        }
-
-        .modal-content li {
-            margin-bottom: 10px;
-            border-left: 3px solid rgba(0, 200, 230, 0.7); /* Bright cyan left border */
-            padding-left: 10px;
-            transition: background-color 0.3s ease, padding-left 0.3s ease, border-left-color 0.3s ease;
-            overflow-wrap: break-word;
-            word-break: break-all;
-        }
-
-        .modal-content li:hover {
-            background-color: rgba(20, 45, 90, 0.6); /* Holographic highlight blue */
-            padding-left: 15px;
-            border-left-color: rgba(100, 230, 255, 1);
-        }
-
-        .modal-content a {
-            color: #a0e0ff; /* Light blue links */
-            text-decoration: none;
-            font-size: 1.1em;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-            display: inline-block;
-            max-width: 100%;
-        }
-
-        .modal-content a:hover {
-            color: #ffffff; /* Bright white on hover */
-            text-shadow: 0 0 8px #fff, 0 0 15px rgba(100, 230, 255, 0.8); /* Stronger white/cyan glow */
-        }
-
-        .header-bar, .footer-bar {
-            height: 5px; /* Thinner for a sharper line */
-            background: linear-gradient(90deg, transparent, rgba(0, 224, 255, 0.7), transparent); /* Glowing line effect */
             border: none;
-            box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
-            margin-bottom: 20px; /* Adjusted margin */
-            margin-top: 20px;   /* Adjusted margin */
+            cursor: pointer;
+        }
+        .close-modal-btn:hover {
+            color: #cc0000;
         }
 
-        .scanlines {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            background: repeating-linear-gradient(transparent, transparent 1px, rgba(0, 120, 150, 0.08) 2px, rgba(0, 120, 150, 0.08) 3px); /* Finer, cyan scanlines */
-            z-index: 99999;
+
+        /* Hidden Info Sections */
+        .info-section {
+            display: none; 
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #505050;
+            background-color: #e8e8e8; 
+        }
+        .info-section h4 {
+            color: #000080; /* Dark blue for sub-headers */
+            margin-top: 0;
+            border-bottom: 1px solid #000080;
+            padding-bottom: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .info-section pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f8f8f8; /* Very light grey for pre */
+            padding: 8px;
+            border: 1px solid #808080;
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            font-family: "Courier New", Courier, monospace;
+            line-height: 1.4;
+        }
+        .info-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .info-section th, .info-section td {
+            border: 1px solid #505050;
+            padding: 5px;
+            text-align: left;
+        }
+        .info-section th {
+            background-color: #c0c0c0;
+            font-weight: bold;
         }
 
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 15px; }
-            h1 { font-size: 2em; }
-            .section-button { font-size: 1.2em; padding: 8px 15px;}
-            .modal { width: 95%; }
-            .modal-title { font-size: 1.2em; }
-            .modal-content a { font-size: 1em; }
-        }
+        /* Utility */
+        .text-red { color: #b30000; font-weight: bold; }
+        .text-yellow { color: #996600; font-weight: bold; }
+        .text-green { color: #006400; font-weight: bold; }
+
+
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mt-2{margin-top:0.5rem}.p-4{padding:1rem}.text-center{text-align:center}.text-sm{font-size:0.875rem;line-height:1.25rem}@media (min-width: 768px){.md\:p-6{padding:1.5rem}}@media (min-width: 1024px){.lg\:p-8{padding:2rem}}</style></head>
+</head>
 <body>
-    <div class="scanlines"></div>
-    <div class="container mx-auto p-4 md:p-6 lg:p-8">
-        <div class="text-center mb-2 text-sm">
-            <!-- Original Text -->
-            <p id="initMsg">> Searching for the best movies... [SUCCESS]</p>
-            <p id="bypassMsg">> Cracking all of the games... [ACCESS GRANTED]</p>
-            <p id="loadMsg">> Loading the torrents... [DONE]</p>
-        </div>
 
-        <div class="header-bar"></div>
-        <!-- Original Text -->
-        <h1>:: YARR v2.2 ::</h1> <div class="header-bar"></div>
-
-        <div class="section-buttons">
-            <!-- Original Text -->
-            <button class="section-button" data-modal-target="moviesTVModal">:: Movies & TV Shows ::</button>
-            <button class="section-button" data-modal-target="gamesModal">:: Games ::</button>
-            <button class="section-button" data-modal-target="torrentsModal">:: Torrents ::</button>
-            <button class="section-button" data-modal-target="ytDownloadersModal">:: YT mp4 / mp3 Downloaders ::</button>
-            <button class="section-button" data-modal-target="utilitiesModal">:: Utilities ::</button>
-            <button class="section-button" data-modal-target="vpnModal">:: VPN's ::</button>
-            <button class="section-button" data-modal-target="adBlockersModal">:: AdBlockers ::</button>
-        </div>
-
-        <div class="footer-bar"></div>
-        <div class="text-center mt-2 text-sm">
-            <!-- Original Text -->
-            <p>> System Status: Online | All Proxies Nominal</p>
-            <p>> Session Logged: NO_TRACE_ACTIVE</p>
-            <p id="disconnectMsg">> Finding you the best Pirating Websites by gelytee...</p>
-        </div>
+    <div class="password-overlay" id="initialPasswordOverlay">
+        <h2>SYSTEM LOGIN</h2>
+        <p style="color: #333; margin-bottom:15px; text-align:center; font-size:0.9em;">Enter Authentication Code.</p>
+        <input type="password" id="initialPasswordInput" placeholder="CODE">
+        <button onclick="checkInitialPassword()">SUBMIT</button>
+        <p class="password-error" id="initialPasswordError"></p>
     </div>
 
-    <div id="moviesTVModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10079;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: Movies & TV Shows ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button> </div>
-        <div class="modal-content">
-            <ul>
-                <li><a href="https://soap2night.cc" target="_blank">> soap2night.cc</a></li>
-                <li><a href="https://wmovies.xyz" target="_blank">> wmovies.xyz</a></li>
-                <li><a href="https://goojara.to" target="_blank">> goojara.to</a></li>
-                <li><a href="https://myflixerz.to" target="_blank">> myflixerz.to</a></li>
-                <li><a href="https://hydrahd.ac" target="_blank">> hydrahd.ac</a></li>
-                <li><a href="https://cineby.app" target="_blank">> cineby.app</a></li>
-                <li><a href="https://watch.ug" target="_blank">> watch.ug</a></li>
-                <li><a href="https://mapple.tv" target="_blank">> mapple.tv</a></li>
-                <li><a href="https://popcornmovies.to" target="_blank">> popcornmovies.to</a></li>
-                <li><a href="https://gomovies.sx" target="_blank">> gomovies.sx</a></li>
-                <li><a href="https://onionplay.ch" target="_blank">> onionplay.ch</a></li>
-                <li><a href="https://lookmovie2.to" target="_blank">> lookmovie2.to</a></li>
-                <li><a href="https://pressplay.top" target="_blank">> pressplay.top</a></li>
-                <li><a href="https://moviesjoytv.to" target="_blank">> moviesjoytv.to</a></li>
-                <li><a href="https://fmovies.co" target="_blank">> fmovies.co</a></li>
-                <li><a href="https://soap2dayhd.co" target="_blank">> soap2dayhd.co</a></li>
-                <li><a href="https://projectfreetv.sx" target="_blank">> projectfreetv.sx</a></li>
-                <li><a href="https://sflix.to" target="_blank">> sflix.to</a></li>
-                <li><a href="https://theflixertv.to" target="_blank">> theflixertv.to</a></li>
-                <li><a href="https://hdtoday.tv" target="_blank">> hdtoday.tv</a></li>
-                <li><a href="https://flixhq.to" target="_blank">> flixhq.to</a></li>
-                <li><a href="https://hurawatch.cc" target="_blank">> hurawatch.cc</a></li>
-                <li><a href="https://broflix.si" target="_blank">> broflix.si</a></li>
-                <li><a href="https://ridomovies.tv" target="_blank">> ridomovies.tv</a></li>
-                <li><a href="https://123moviesfree.net" target="_blank">> 123moviesfree.net</a></li>
-                <li><a href="https://hdtoday.cc" target="_blank">> hdtoday.cc</a></li>
-                <li><a href="https://vidplay.org" target="_blank">> vidplay.org</a></li>
-                <li><a href="https://putlocker.pe" target="_blank">> putlocker.pe</a></li>
-                <li><a href="https://gomoviestv.to" target="_blank">> gomoviestv.to</a></li>
-                <li><a href="https://yesmovies.ag" target="_blank">> yesmovies.ag</a></li>
-                <li><a href="https://watchseries.pe" target="_blank">> watchseries.pe</a></li>
-                <li><a href="https://soaper.top" target="_blank">> soaper.top</a></li>
-                <li><a href="https://watch32.sx" target="_blank">> watch32.sx</a></li>
-                <li><a href="https://flickermini.pages.dev" target="_blank">> flickermini.pages.dev</a></li>
-            </ul>
+    <div class="main-content" id="mainContentArea">
+        <div class="classification-header">TOP SECRET // SI-GAMMA // EYES ONLY</div>
+
+        <div class="document-header">
+            <p><strong>FROM:</strong> OPS DIR, TASK GROUP 7.3</p>
+            <p><strong>TO:</strong> JNT STAFF LNO (CODE S-2)</p>
+            <p><strong>DATE:</strong> <span id="currentDate"></span></p>
+            <p><strong>SUBJECT:</strong> URGENT REPORT: ANOMALOUS CONTACT DESIGNATION XA-441B</p>
+            <p><strong>MSG ID:</strong> TG73-RPT-004-24</p>
         </div>
+
+        <div class="message-body">
+            <h3>1. SITUATION REPORT</h3>
+            <p>This report details initial findings concerning Unidentified Maritime/Subsurface Contact (UMSC) XA-441B, detected 03:17Z 19 JUL 2024, Sector DELTA-9 (Grid Ref: Encrypted Annex). Contact identified via anomalous gravimetric displacement and multi-spectrum EM variance. Restricted Access Zone (RAZ) DELTA established T+4H of detection.</p>
+            <p>Remote observation confirms XA-441B is an artificial construct of unknown, presumed non-terrestrial, origin.</p>
+
+            <h3>2. CONTACT XA-441B: OBSERVATIONAL DATA (PRELIM)</h3>
+            <ul>
+                <li><strong>Configuration:</strong> Irregular flattened ovoid. Approx. dimensions: 27m (L) x 11m (W). Surface non-reflective, appears seamless. No visible propulsion or external features detected.</li>
+                <li><strong>Material Scan (Stand-off):</strong> Primary structure composed of an unknown metallic alloy with high elemental density. Isotopic ratios inconsistent with Sol system norms. Ref: Tech Annex 1A.</li>
+                <li><strong>Energy Output:</strong> Continuous low-level emission of neutrinos and high-frequency particle radiation. Internal power source output estimated to significantly exceed current terrestrial capabilities.</li>
+                <li><strong>Status:</strong> Contact appears inert. No active transmissions or biological signatures detected.</li>
+            </ul>
+
+            <h3>3. ASSESSMENT AND IMPLICATIONS</h3>
+            <p>The confirmed presence of XA-441B constitutes a significant intelligence event with major national security implications. Potential consequences include:</p>
+            <ul>
+                <li>Confirmation of advanced non-human technological presence.</li>
+                <li>Potential for significant technological gain or emergent threat vector, dependent on contact's origin and intent.</li>
+                <li>Requirement for immediate review of current defense posture and contingency protocols.</li>
+            </ul>
+
+            <h3>4. RECOMMENDED ACTIONS</h3>
+            <p>Based on current information, the following actions are directed:</p>
+            <ol>
+                <li>Implement INFOSEC PROTOCOL RED (Full Spectrum Information Control).</li>
+                <li>Enhance surveillance and security of RAZ DELTA.</li>
+                <li>Develop phased plan for detailed study of XA-441B, prioritizing non-invasive methods.</li>
+                <li>Brief designated Allied liaisons per AGREEMENT SIERRA-TANGO, under strict compartmentation.</li>
+                <li>Review and update CONTINGENCY PLAN ZULU-7 (Anomalous Contact Response).</li>
+            </ol>
+            <p class="text-red"><strong>WARNING: This information is classified TOP SECRET//SI-GAMMA. Unauthorized disclosure is a violation of federal law and will be prosecuted.</strong></p>
+        </div>
+
+        <div class="action-buttons-container">
+            <button class="action-btn" data-infoid="xr73Analysis">View Tech Annex 1A (Material)</button>
+            <button class="action-btn" data-infoid="commsLogs">View Comm Log Excerpt</button>
+            <button class="action-btn" data-infoid="contingencyProtocol">View Zulu-7 Protocol Summary</button>
+            <button class="action-btn" data-infoid="decemberDirective">View Directive 07-ALPHA</button>
+        </div>
+
+        <!-- Hidden Info Sections -->
+        <div class="info-section" id="info-xr73Analysis">
+            <h4>Tech Annex 1A: XA-441B Material Scan (Summary)</h4>
+            <p>Stand-off Spectroscopic Analysis (SSA) of XA-441B outer hull:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Est. %</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Metallic Alloy (Type IV-Unknown)</td>
+                        <td>~68%</td>
+                        <td class="text-yellow">Novel crystal structure. High density.</td>
+                    </tr>
+                    <tr>
+                        <td>Ceramic-Polymer Composite</td>
+                        <td>~20%</td>
+                        <td>Possible EM dampening.</td>
+                    </tr>
+                    <tr>
+                        <td>Element Z-Prime (Isotope Group)</td>
+                        <td>~9%</td>
+                        <td class="text-red">Theoretically unstable. Suggests advanced field containment.</td>
+                    </tr>
+                    <tr>
+                        <td>Trace Organics</td>
+                        <td><2%</td>
+                        <td>Undetermined.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Energy Notes:</strong> Gravimetric readings indicate non-uniform internal mass, likely complex systems. Neutrino flux pattern currently under analysis.</p>
+        </div>
+
+        <div class="info-section" id="info-commsLogs">
+            <h4>Comm Log Excerpt: XA-441B Interaction Test (Protocol BEACON-3)</h4>
+            <pre>
+DTG: 200800Z JUL 24
+  TEST 01: RF Pulse (1-10GHz Prime Seq.)
+  RESULT: NEGATIVE RESPONSE. SIG UNCHANGED.
+---
+DTG: 201430Z JUL 24
+  TEST 02: Optical Tx (1550nm Math Const.)
+  RESULT: NEGATIVE RESPONSE. LOCALIZED ABSORPTION NOTED.
+---
+DTG: 210215Z JUL 24
+  TEST 03: Sub-Aquatic Sonar (10-500Hz Var.)
+  RESULT: <span class="text-yellow">ANOMALY:</span> TRANSIENT RESONANCE AT 188.3HZ. MINOR NEUTRINO SPIKE. NO COMMS.
+---
+[TESTING SUSPENDED PER DIR 07-ALPHA]
+            </pre>
+        </div>
+
+        <div class="info-section" id="info-contingencyProtocol">
+            <h4>Contingency Plan ZULU-7 (XA-441B) - Summary</h4>
+            <p>Response levels for XA-441B status changes:</p>
+            <ul>
+                <li><strong>LEVEL 4 (Info Breach):</strong> INFOSEC PROTOCOL BLACK. Counter-intel ops.</li>
+                <li><strong>LEVEL 3 (Activation - Non-Hostile):</strong> RAZ DELTA heightened alert. Monitor. Attempt contact (PROTOCOL BEACON-3 REV B).</li>
+                <li><strong>LEVEL 2 (Activation - Ambiguous/Threat):</strong> QRF deployment. Prep EVAC ORDER BRAVO. Non-lethal deterrents authorized.</li>
+                <li><strong>LEVEL 1 (Hostile Action):</strong> Full engagement authority. DEFCON protocols apply.</li>
+            </ul>
+            <p class="text-red"><strong>ZULU-7 subject to revision.</strong></p>
+        </div>
+
+        <div class="info-section" id="info-decemberDirective">
+            <h4>Directive 07-ALPHA: Task Group 7.3 Operational Mandate (XA-441B)</h4>
+            <p>Effective Immediately.</p>
+            <ol>
+                <li><strong>Secrecy:</strong> TOP SECRET//SI-GAMMA classification is paramount.</li>
+                <li><strong>Scientific Team:</strong> Form Joint Analysis Group (JAG) for XA-441B study. Non-invasive methods prioritized.</li>
+                <li><strong>Defense Posture:</strong> Expedite PROJECT AEGIS upgrades.</li>
+                <li><strong>Allied Liaison:</strong> Brief AGREEMENT SIERRA-TANGO partners via secure channels.</li>
+                <li><strong>Resources:</strong> Task Group 7.3 assigned Priority Alpha for resources.</li>
+                <li><strong>Comms Moratorium:</strong> Suspend active signaling pending JAG assessment.</li>
+            </ol>
+            <p class="text-yellow"><strong>This directive is binding.</strong></p>
+            <p>AUTHORIZED: [REDACTED]</p>
+        </div>
+
+
+        <div class="classification-header bottom">TOP SECRET // SI-GAMMA // EYES ONLY</div>
     </div>
 
-    <div id="gamesModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10077;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: Games ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button> </div>
-        <div class="modal-content">
-            <ul>
-                <li><a href="https://fitgirl-repacks.site" target="_blank">> fitgirl-repacks.site</a></li>
-                <li><a href="https://dodi-repacks.site" target="_blank">> dodi-repacks.site</a></li>
-                <li><a href="https://ankergames.net" target="_blank">> ankergames.net</a></li>
-                <li><a href="https://g4u.to" target="_blank">> g4u.to</a></li>
-                <li><a href="https://steamrip.com" target="_blank">> steamrip.com</a></li>
-                <li><a href="https://steamgg.net" target="_blank">> steamgg.net</a></li>
-                <li><a href="https://m4ckd0ge-repacks.site" target="_blank">> m4ckd0ge-repacks.site</a></li>
-                <li><a href="https://gload.to" target="_blank">> gload.to</a></li>
-                <li><a href="https://repack-games.com/" target="_blank">> repack-games.com</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="torrentsModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10072;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: Torrents ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button> </div>
-        <div class="modal-content">
-            <ul>
-                <li><a href="https://1337x.to" target="_blank">> 1337x.to</a></li>
-                <li><a href="https://thepiratebay.org" target="_blank">> thepiratebay.org</a></li>
-                <li><a href="https://rutracker.org" target="_blank">> rutracker.org</a></li>
-                <li><a href="https://rargb.to" target="_blank">> rargb.to</a></li>
-                <li><a href="https://limetorrents.lol" target="_blank">> limetorrents.lol</a></li>
-                <li><a href="https://yts.mx" target="_blank">> yts.mx [Movies]</a></li>
-                <li><a href="https://eztvx.to" target="_blank">> eztvx.to [TV Shows]</a></li>
-                <li><a href="https://torrentgalaxy.one" target="_blank">> torrentgalaxy.one</a></li>
-                <li><a href="https://extratorrent.st" target="_blank">> extratorrent.st</a></li>
-                <li><a href="https://nyaa.si/?f=0&c=6_2&q=" target="_blank">> nyaa.si [Anime/Asian Content]</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="ytDownloadersModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10070;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: YT mp4 / mp3 Downloaders ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button>
-        </div>
-        <div class="modal-content">
-            <ul>
-                <!-- Original Text -->
-                <li><a href="https://cobalt.tools/" target="_blank">> cobalt.tools [YT Multi-Downloader]</a></li>
-                <li><a href="https://ezmp3.cc/" target="_blank">> ezmp3.cc [YT to MP3]</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="utilitiesModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10068;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: Utilities ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button>
-        </div>
-        <div class="modal-content">
-            <ul>
-                <!-- Original Text -->
-                <li><a href="https://massgrave.dev/genuine-installation-media" target="_blank">> massgrave.dev [Windows/Office Media]</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="vpnModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10066;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: VPN's ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button>
-        </div>
-        <div class="modal-content">
-            <ul>
-                <li><a href="https://nordvpn.com/" target="_blank">> NordVPN (nordvpn.com)</a></li>
-                <li><a href="https://surfshark.com/" target="_blank">> Surfshark VPN (surfshark.com)</a></li>
-                <li><a href="https://www.expressvpn.com/" target="_blank">> ExpressVPN (expressvpn.com)</a></li>
-                <li><a href="https://www.cyberghostvpn.com/" target="_blank">> CyberGhost VPN (cyberghostvpn.com)</a></li>
-                <li><a href="https://www.privateinternetaccess.com/" target="_blank">> Private Internet Access (privateinternetaccess.com)</a></li>
-                <li><a href="https://veepn.com/" target="_blank">> VeePN (veepn.com)</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="adBlockersModal" class="modal" style="display: none; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10064;">
-        <div class="modal-header">
-            <!-- Original Text -->
-            <span class="modal-title">:: AdBlockers ::</span>
-            <button class="modal-close-button" data-modal-close="">X</button>
-        </div>
-        <div class="modal-content">
-            <ul>
-                <li><a href="https://surfshark.com/features/ad-blocker" target="_blank">> Surfshark CleanWeb (surfshark.com)</a></li>
-                <li><a href="https://ublockorigin.com/" target="_blank">> uBlock Origin (ublockorigin.com)</a></li>
-                <li><a href="https://adblockplus.org/" target="_blank">> AdBlock Plus (adblockplus.org)</a></li>
-                <li><a href="https://adguard.com/" target="_blank">> AdGuard (adguard.com)</a></li>
-                <li><a href="https://getadblock.com/" target="_blank">> AdBlock (getadblock.com)</a></li>
-                <li><a href="https://poperblocker.com/" target="_blank">> Poper Blocker (poperblocker.com)</a></li>
-            </ul>
+    <!-- Password Modal for Action Buttons -->
+    <div class="password-modal" id="actionPasswordModal">
+        <div class="password-modal-content">
+            <button class="close-modal-btn" onclick="closeActionPasswordModal()">X</button>
+            <h3>Annex Access</h3>
+            <p style="color: #333; margin-bottom:15px; font-size:0.9em;">Enter Operational Code.</p>
+            <input type="password" id="actionPasswordInput" placeholder="CODE">
+            <button onclick="checkActionPassword()">Access</button>
+            <p class="password-error" id="actionPasswordError"></p>
         </div>
     </div>
 
     <script>
-        // Typing effect for header messages
-        function typeEffect(element, text, callback, speed = 75, initialDelay = 0) {
-            let i = 0;
-            element.textContent = '>';
-            let currentText = '';
-            setTimeout(() => {
-                function type() {
-                    if (i < text.length) {
-                        currentText += text.charAt(i);
-                        element.textContent = '> ' + currentText;
-                        i++;
-                        setTimeout(type, Math.random() * 50 + speed / 2);
-                    } else if (callback) {
-                        callback();
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
+
+        const initialPasswordOverlay = document.getElementById('initialPasswordOverlay');
+        const initialPasswordInput = document.getElementById('initialPasswordInput');
+        const initialPasswordError = document.getElementById('initialPasswordError');
+        const mainContentArea = document.getElementById('mainContentArea');
+
+        const actionPasswordModal = document.getElementById('actionPasswordModal');
+        const actionPasswordInput = document.getElementById('actionPasswordInput');
+        const actionPasswordError = document.getElementById('actionPasswordError');
+        
+        let currentInfoSectionId = null;
+
+        function checkInitialPassword() {
+            if (initialPasswordInput.value === "sacred") {
+                initialPasswordOverlay.style.display = 'none';
+                mainContentArea.style.display = 'block';
+                initialPasswordError.textContent = '';
+            } else {
+                initialPasswordError.textContent = 'AUTHENTICATION FAILED.';
+                initialPasswordInput.value = '';
+            }
+        }
+        initialPasswordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                checkInitialPassword();
+            }
+        });
+
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                currentInfoSectionId = this.dataset.infoid;
+                document.querySelectorAll('.info-section').forEach(sec => sec.style.display = 'none');
+                
+                actionPasswordModal.style.display = 'flex';
+                actionPasswordInput.value = '';
+                actionPasswordError.textContent = '';
+                actionPasswordInput.focus();
+            });
+        });
+
+        function closeActionPasswordModal() {
+            actionPasswordModal.style.display = 'none';
+            currentInfoSectionId = null;
+        }
+
+        function checkActionPassword() {
+            if (actionPasswordInput.value === "secret") {
+                actionPasswordModal.style.display = 'none';
+                actionPasswordError.textContent = '';
+                if (currentInfoSectionId) {
+                    const sectionToOpen = document.getElementById('info-' + currentInfoSectionId);
+                    if (sectionToOpen) {
+                        sectionToOpen.style.display = 'block';
+                        sectionToOpen.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
                 }
-                type();
-            }, initialDelay);
-        }
-
-        const initMsgEl = document.getElementById('initMsg');
-        const bypassMsgEl = document.getElementById('bypassMsg');
-        const loadMsgEl = document.getElementById('loadMsg');
-
-        if (initMsgEl && bypassMsgEl && loadMsgEl) {
-            // Original Text for JS typing effect
-            const originalInitText = "Searching for the best movies...";
-            const originalBypassText = "Cracking all of the games...";
-            const originalLoadText = "Loading the torrents...";
-
-            typeEffect(initMsgEl, originalInitText, () => {
-                // Original Suffixes
-                initMsgEl.textContent += " [SUCCESS]";
-                typeEffect(bypassMsgEl, originalBypassText, () => {
-                    // Adjusted the "CRACKED" to match the original "ACCESS GRANTED" behavior,
-                    // but the original JS actually set it to "CRACKED".
-                    // To strictly follow the *first file's* text, we'd use "[ACCESS GRANTED]"
-                    // However, the original JS had `bypassMsgEl.textContent += " [CRACKED]";`
-                    // For consistency with the *first file's JS behavior* I'll use CRACKED.
-                    // If you meant the visual text "ACCESS GRANTED" from the first file's HTML, let me know.
-                    // For now, matching the first file's JS output which was "Cracking all of the games... [CRACKED]"
-                    bypassMsgEl.textContent += " [CRACKED]"; // This was the JS behavior in the first file.
-                                                            // If you meant the visual text from the HTML, change to " [ACCESS GRANTED]"
-                    typeEffect(loadMsgEl, originalLoadText, () => {
-                        loadMsgEl.textContent += " [DONE]";
-                    }, 75, 200);
-                }, 75, 200);
-            }, 75, 500);
-        }
-
-        // Console messages (reverted to original from first file, but styled for hologram)
-        console.log("%c:: ACCESS PROTOCOL V2.2 INITIATED ::", "color: #00e0ff; font-family: monospace; font-size: 20px; text-shadow: 0 0 5px #00e0ff, 0 0 10px #00a0c0;");
-        console.log("%cWelcome back, Operator. Systems enhanced.", "color: #80d0ff; font-family: monospace;");
-        console.log("%cModal interface refined. Scrollbars themed. Drag optimized.", "color: #40c0e0; font-family: monospace;");
-        console.log("%cRemember: Leave no trace.", "color: #0080a0; font-family: monospace; font-style: italic;");
-
-
-        // Modal Functionality (unchanged from original, except for console log messages above)
-        const sectionButtons = document.querySelectorAll('.section-button');
-        const closeButtons = document.querySelectorAll('[data-modal-close]');
-        let activeModal = null;
-        let highestZIndex = 10000; 
-
-        sectionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const modalId = button.getAttribute('data-modal-target');
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    openModal(modal);
-                }
-            });
-        });
-
-        closeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = button.closest('.modal');
-                if (modal) {
-                    closeModal(modal);
-                }
-            });
-        });
-
-        function openModal(modal) {
-            if (modal == null) return;
-            
-            modal.style.display = 'block';
-            const modalWidth = modal.offsetWidth;
-            const modalHeight = modal.offsetHeight;
-            modal.style.left = `${(window.innerWidth - modalWidth) / 2}px`;
-            modal.style.top = `${(window.innerHeight - modalHeight) / 2}px`;
-            modal.style.transform = 'none'; 
-
-            activeModal = modal;
-            highestZIndex++;
-            modal.style.zIndex = highestZIndex;
-        }
-
-        function closeModal(modal) {
-            if (modal == null) return;
-            modal.style.display = 'none';
-            modal.style.left = '50%';
-            modal.style.top = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            if (activeModal === modal) {
-                activeModal = null;
+            } else {
+                actionPasswordError.textContent = 'INVALID CODE. ACCESS DENIED.';
+                actionPasswordInput.value = '';
             }
         }
-
-        document.querySelectorAll('.modal').forEach(modal => {
-            const header = modal.querySelector('.modal-header');
-            if (!header) return;
-
-            let isDragging = false;
-            let initialX, initialY, offsetX, offsetY;
-
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.modal-close-button')) {
-                    return; 
-                }
-                isDragging = true;
-                initialX = e.clientX;
-                initialY = e.clientY;
-                offsetX = modal.offsetLeft;
-                offsetY = modal.offsetTop;
-
-                highestZIndex++; 
-                modal.style.zIndex = highestZIndex;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault(); 
-
-                let newX = offsetX + (e.clientX - initialX);
-                let newY = offsetY + (e.clientY - initialY);
-
-                modal.style.left = `${newX}px`;
-                modal.style.top = `${newY}px`;
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                }
-            });
-
-            header.addEventListener('mouseleave', () => {
-                if (!isDragging) {
-                    // CSS handles cursor
-                }
-            });
-            header.addEventListener('mouseenter', () => {
-                if (!isDragging) {
-                    // CSS handles cursor
-                }
-            });
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && activeModal) {
-                closeModal(activeModal);
+        actionPasswordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                checkActionPassword();
             }
         });
-
-        window.addEventListener('resize', () => {
-            document.querySelectorAll('.modal').forEach(modal => {
-                if (modal.style.display === 'block') {
-                    // No re-centering on resize to allow modals to be moved off-screen
-                    // and stay there if the user intended.
-                    /*
-                    const modalWidth = modal.offsetWidth;
-                    const modalHeight = modal.offsetHeight;
-                    let newX = (window.innerWidth - modalWidth) / 2;
-                    let newY = (window.innerHeight - modalHeight) / 2;
-                    modal.style.left = `${newX}px`;
-                    modal.style.top = `${newY}px`;
-                    */
-                }
-            });
-        });
-
     </script>
 
-
-</body></html>
+</body>
+</html>
