@@ -133,7 +133,7 @@
         }
         .document-header strong {
             display: inline-block;
-            width: 100px; 
+            width: 100px;
             color: #333333;
             font-weight: bold;
         }
@@ -222,11 +222,11 @@
 
         /* Hidden Info Sections */
         .info-section {
-            display: none; 
+            display: none;
             margin-top: 20px;
             padding: 10px;
             border: 1px dashed #505050;
-            background-color: #e8e8e8; 
+            background-color: #e8e8e8;
         }
         .info-section h4 {
             color: #000080; /* Dark blue for sub-headers */
@@ -270,6 +270,90 @@
         .text-yellow { color: #996600; font-weight: bold; }
         .text-green { color: #006400; font-weight: bold; }
 
+        /* START OF NEW CSS - DO NOT MODIFY CSS ABOVE THIS LINE */
+        .agreement-container {
+            margin-top: 15px;
+            margin-bottom: 10px; /* Space before submit button */
+            font-size: 0.85em;
+            text-align: left;
+            width: 270px; /* To roughly match password input width + some margin */
+        }
+        .agreement-container input[type="checkbox"] {
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .agreement-container label {
+            vertical-align: middle;
+        }
+        .view-agreement-link {
+            color: #000080; /* Dark blue link */
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        .view-agreement-link:hover {
+            color: #0000cc;
+        }
+
+        .legal-terms-modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(100, 100, 100, 0.6); /* Semi-transparent darker grey */
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Above password overlay */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .legal-terms-modal-content {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border: 2px solid #000000;
+            width: 90%;
+            max-width: 600px;
+            height: 70%;
+            max-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .legal-terms-modal-content h3 {
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 5px;
+            font-size: 1.1em;
+        }
+        .legal-terms-text-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #808080;
+            padding: 10px;
+            background-color: #ffffff;
+            font-family: "Times New Roman", Times, serif; /* More formal/legal font */
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .legal-terms-modal-content button {
+            padding: 8px 15px;
+            background-color: #b0b0b0;
+            color: #000000;
+            border: 1px outset #808080;
+            cursor: pointer;
+            font-weight: bold;
+            align-self: center;
+        }
+        .legal-terms-modal-content button:hover {
+            background-color: #a0a0a0;
+        }
+        /* END OF NEW CSS - DO NOT MODIFY CSS BELOW THIS LINE */
 
     </style>
 </head>
@@ -279,7 +363,17 @@
         <h2>SYSTEM LOGIN</h2>
         <p style="color: #333; margin-bottom:15px; text-align:center; font-size:0.9em;">Enter Authentication Code.</p>
         <input type="password" id="initialPasswordInput" placeholder="CODE">
-        <button onclick="checkInitialPassword()">SUBMIT</button>
+        
+        <!-- START OF NEW HTML - DO NOT MODIFY HTML OUTSIDE THIS BLOCK -->
+        <div class="agreement-container">
+            <input type="checkbox" id="agreementCheckbox">
+            <label for="agreementCheckbox">I acknowledge and agree to the
+                <span class="view-agreement-link" id="viewAgreementBtn">terms of use</span>.
+            </label>
+        </div>
+        <!-- END OF NEW HTML -->
+
+        <button onclick="checkInitialPassword()" id="initialSubmitButton">SUBMIT</button>
         <p class="password-error" id="initialPasswordError"></p>
     </div>
 
@@ -434,6 +528,30 @@ DTG: 210215Z JUL 24
         </div>
     </div>
 
+    <!-- START OF NEW HTML - DO NOT MODIFY HTML OUTSIDE THIS BLOCK -->
+    <div class="legal-terms-modal-overlay" id="legalTermsModal">
+        <div class="legal-terms-modal-content">
+            <h3>TERMS OF SYSTEM ACCESS & DATA HANDLING</h3>
+            <div class="legal-terms-text-area" id="legalTermsTextArea">
+                <p><strong>NOTICE TO ALL PERSONNEL ACCESSING THIS SYSTEM:</strong></p>
+                <p>By proceeding beyond this point and accessing any data contained within this system ("System"), you ("User") hereby acknowledge, understand, and expressly agree to the following terms and conditions. Failure to comply with these terms may result in severe administrative, civil, and/or criminal penalties, including but not limited to termination of access, employment termination, fines, and imprisonment under applicable federal and international law.</p>
+                <p><strong>1. CLASSIFICATION AND HANDLING:</strong> All information contained within or accessed through this System is classified at a minimum level of TOP SECRET//SI-GAMMA or higher, unless explicitly marked otherwise. User agrees to handle all such information in strict accordance with U.S. Government regulations, agency-specific directives (including but not limited to Directive 00-ALPHA-SECURITY), and all relevant non-disclosure agreements (NDAs) signed by the User. No information may be copied, transmitted, discussed, or removed from authorized secure facilities or networks without explicit, written authorization from the designated cognizant security authority (CSA).</p>
+                <p><strong>2. AUTHORIZED USE ONLY:</strong> Access to this System is granted solely for official U.S. Government duties as authorized by User's direct chain of command and validated security clearance. Any access or attempted access for personal use, unauthorized research, or any purpose not directly related to assigned official duties is strictly prohibited and will be logged and investigated.</p>
+                <p><strong>3. MONITORING AND AUDIT:</strong> User acknowledges that all activities on this System, including keystrokes, data access, file transfers, and communication attempts, are subject to continuous monitoring, recording, and auditing by authorized U.S. Government personnel without further notice. This monitoring is conducted for purposes of system security, maintenance, law enforcement, counterintelligence, and to ensure compliance with all applicable regulations and policies. There is no expectation of privacy when using this System.</p>
+                <p><strong>4. DATA INTEGRITY AND SECURITY INCIDENTS:</strong> User is responsible for maintaining the integrity and security of all data accessed. Any suspected or actual security incident, data spillage, unauthorized disclosure, or suspicious activity must be reported IMMEDIATELY to the System Security Officer (SSO) or the designated incident response team through established reporting channels.</p>
+                <p><strong>5. NON-DISCLOSURE OBLIGATION:</strong> The obligation to protect classified information accessed through this System extends indefinitely, even after termination of User's access, employment, or affiliation with the U.S. Government. User agrees never to disclose, publish, or disseminate any classified information to any unauthorized person or entity.</p>
+                <p><strong>6. CONSENT TO JURISDICTION:</strong> User consents to the jurisdiction of U.S. federal courts for any action arising from or related to the use of this System or the handling of information obtained therefrom.</p>
+                <p><strong>7. ACKNOWLEDGEMENT OF UNDERSTANDING:</strong> By checking the "I acknowledge and agree" box and proceeding with authentication, User affirms that they have read, understood, and consent to be legally bound by these Terms of System Access & Data Handling. User further affirms that they possess the requisite security clearance and need-to-know for the information they are attempting to access.</p>
+                <p>FAILURE TO ADHERE TO THESE TERMS CONSTITUTES A SERIOUS SECURITY VIOLATION.</p>
+                <hr>
+                <p style="font-size:0.8em; text-align:center;">Document Version: TOS-SYS-1.7.3 REV B - Last Updated: 2023-11-01</p>
+            </div>
+            <button id="closeLegalTermsBtn">CLOSE</button>
+        </div>
+    </div>
+    <!-- END OF NEW HTML -->
+
+
     <script>
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
 
@@ -449,6 +567,13 @@ DTG: 210215Z JUL 24
         let currentInfoSectionId = null;
 
         function checkInitialPassword() {
+            // START OF MODIFIED JS - DO NOT MODIFY JS OUTSIDE THIS FUNCTION (unless it's the new event listeners below)
+            if (!document.getElementById('agreementCheckbox').checked) {
+                initialPasswordError.textContent = 'YOU MUST AGREE TO THE TERMS OF USE.';
+                return;
+            }
+            // END OF MODIFIED JS
+
             if (initialPasswordInput.value === "sacred") {
                 initialPasswordOverlay.style.display = 'none';
                 mainContentArea.style.display = 'block';
@@ -505,6 +630,49 @@ DTG: 210215Z JUL 24
                 checkActionPassword();
             }
         });
+
+        // START OF NEW JAVASCRIPT - DO NOT MODIFY JS ABOVE THIS LINE (except the one line in checkInitialPassword)
+        const agreementCheckbox = document.getElementById('agreementCheckbox');
+        const initialSubmitButton = document.getElementById('initialSubmitButton');
+        const viewAgreementBtn = document.getElementById('viewAgreementBtn');
+        const legalTermsModal = document.getElementById('legalTermsModal');
+        const closeLegalTermsBtn = document.getElementById('closeLegalTermsBtn');
+
+        // Initially disable submit button
+        initialSubmitButton.disabled = true;
+        initialSubmitButton.style.backgroundColor = '#d0d0d0'; // Visually indicate disabled
+        initialSubmitButton.style.cursor = 'not-allowed';
+
+
+        agreementCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                initialSubmitButton.disabled = false;
+                initialSubmitButton.style.backgroundColor = '#b0b0b0';
+                initialSubmitButton.style.cursor = 'pointer';
+                initialPasswordError.textContent = ''; // Clear previous error if agreement was the issue
+            } else {
+                initialSubmitButton.disabled = true;
+                initialSubmitButton.style.backgroundColor = '#d0d0d0';
+                initialSubmitButton.style.cursor = 'not-allowed';
+            }
+        });
+
+        viewAgreementBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent any default span action
+            legalTermsModal.style.display = 'flex';
+        });
+
+        closeLegalTermsBtn.addEventListener('click', function() {
+            legalTermsModal.style.display = 'none';
+        });
+        
+        // Close modal if clicking outside the content (on the overlay)
+        legalTermsModal.addEventListener('click', function(event) {
+            if (event.target === legalTermsModal) {
+                legalTermsModal.style.display = 'none';
+            }
+        });
+        // END OF NEW JAVASCRIPT
     </script>
 
 </body>
