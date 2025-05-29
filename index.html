@@ -13,6 +13,7 @@
             padding: 10px;
             line-height: 1.5;
             font-size: 14px;
+            transition: background-image 0.05s ease-in-out; /* For smooth blink transition */
         }
 
         .password-overlay {
@@ -131,7 +132,7 @@
         }
         .document-header strong {
             display: inline-block;
-            width: 100px;
+            width: 150px;
             color: #333333;
             font-weight: bold;
         }
@@ -347,6 +348,98 @@
             background-color: #a0a0a0;
         }
 
+        /* START OF NEW CSS FOR VIDEO PLAYER - DO NOT MODIFY CSS ABOVE THIS LINE */
+        .video-player-container {
+            width: 100%;
+            max-width: 640px; /* Adjust as needed */
+            margin: 15px auto;
+            background-color: #a0a0a0; /* Darker grey for player housing */
+            border: 2px solid #333;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .video-player-container video {
+            width: 100%;
+            display: block;
+            background-color: #000; /* Black background for video area */
+        }
+        .custom-controls {
+            background-color: #b0b0b0; /* Lighter grey for controls bar */
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #333;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .custom-controls button {
+            background-color: #c0c0c0;
+            border: 1px outset #505050;
+            color: #000;
+            padding: 4px 8px;
+            margin-right: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .custom-controls button:hover {
+            background-color: #afafaf;
+        }
+         .custom-controls button:active {
+            border-style: inset;
+        }
+        .seek-bar-container {
+            flex-grow: 1;
+            background-color: #505050; /* Dark track for seek bar */
+            height: 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #333;
+        }
+        .seek-bar-progress {
+            background-color: #008000; /* Green progress */
+            height: 100%;
+            width: 0%; /* Initial width */
+        }
+        .time-display {
+            font-size: 0.8em;
+            margin: 0 5px;
+            min-width: 70px; /* To prevent layout shift */
+            text-align: center;
+        }
+        .volume-controls {
+            display: flex;
+            align-items: center;
+        }
+        .volume-controls input[type="range"] {
+            width: 60px; /* Simple volume slider */
+            height: 8px;
+            margin: 0 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #505050;
+            outline: none;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
+        .volume-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 8px;
+            height: 12px;
+            background: #c0c0c0;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        .volume-controls input[type="range"]::-moz-range-thumb {
+            width: 8px;
+            height: 12px;
+            background: #c0c0c0;
+            border: 1px solid #333;
+            cursor: pointer;
+            border-radius: 0;
+        }
+        /* END OF NEW CSS FOR VIDEO PLAYER */
+
     </style>
 </head>
 <body>
@@ -368,141 +461,204 @@
     </div>
 
     <div class="main-content" id="mainContentArea">
-        <div class="classification-header">TOP SECRET // SI-GAMMA // EYES ONLY</div>
+        <div class="classification-header">TOP SECRET // SCI-TEMPORAL // EYES ONLY</div>
 
         <div class="document-header">
-            <p><strong>FROM:</strong> OPS DIR, TASK GROUP 7.3</p>
-            <p><strong>TO:</strong> JNT STAFF LNO (CODE S-2)</p>
+            <p><strong>FROM:</strong> PROJECT ANCHORAGE OVERSIGHT</p>
+            <p><strong>TO:</strong> JOINT CHRONO-OPERATIONS COMMAND (JCOC)</p>
             <p><strong>DATE:</strong> <span id="currentDate"></span></p>
-            <p><strong>SUBJECT:</strong> URGENT REPORT: ANOMALOUS CONTACT DESIGNATION XA-441B</p>
-            <p><strong>MSG ID:</strong> TG73-RPT-004-24</p>
+            <p><strong>SUBJECT:</strong> INCIDENT REPORT: UNCONTROLLED TEMPORAL DISPLACEMENT - SITE GAMMA-7</p>
+            <p><strong>INCIDENT ID:</strong> TDI-2024-001-G7</p>
         </div>
 
         <div class="message-body">
-            <h3>1. SITUATION REPORT</h3>
-            <p>This report details initial findings concerning Unidentified Maritime/Subsurface Contact (UMSC) XA-441B, detected 03:17Z 19 JUL 2024, Sector DELTA-9 (Grid Ref: Encrypted Annex). Contact identified via anomalous gravimetric displacement and multi-spectrum EM variance. Restricted Access Zone (RAZ) DELTA established T+4H of detection.</p>
-            <p>Remote observation confirms XA-441B is an artificial construct of unknown, presumed non-terrestrial, origin.</p>
+            <h3>1. INCIDENT SUMMARY</h3>
+            <p>This report details an uncontrolled temporal displacement event (TDE) originating at Site Gamma-7 (Nevada Test and Training Range, Restricted Sector) at 09:17 PST, 19 JUL 2024. The event occurred during calibration tests of the Chronometric Resonance Field Generator (CRFG) Unit 03. An unexpected energy cascade resulted in the formation of a localized temporal aperture.</p>
+            <p>Preliminary data indicates the aperture stabilized briefly, resulting in the translocation of personnel and equipment. Site Gamma-7 is currently under full lockdown (PROTOCOL TITAN).</p>
 
-            <h3>2. CONTACT XA-441B: OBSERVATIONAL DATA (PRELIM)</h3>
+            <h3>2. AFFECTED ASSETS (PERSONNEL & EQUIPMENT)</h3>
+            <p>The following assets are confirmed to have been within the immediate vicinity of the CRFG Unit 03 containment chamber at the time of the event and are now unaccounted for:</p>
             <ul>
-                <li><strong>Configuration:</strong> Irregular flattened ovoid. Approx. dimensions: 27m (L) x 11m (W). Surface non-reflective, appears seamless. No visible propulsion or external features detected.</li>
-                <li><strong>Material Scan (Stand-off):</strong> Primary structure composed of an unknown metallic alloy with high elemental density. Isotopic ratios inconsistent with Sol system norms. Ref: Tech Annex 1A.</li>
-                <li><strong>Energy Output:</strong> Continuous low-level emission of neutrinos and high-frequency particle radiation. Internal power source output estimated to significantly exceed current terrestrial capabilities.</li>
-                <li><strong>Status:</strong> Contact appears inert. No active transmissions or biological signatures detected.</li>
+                <li>**Personnel:** Expeditionary Team Delta (4 members: Lead Physicist Dr. Aris Thorne, Security Chief M. Riker, Engineer L. Chen, Biologist Dr. S. N’Goma). All equipped with standard environmental suits and short-range communicators.</li>
+                <li>**Equipment:** Mobile Sensor Array (MSA-04), portable power unit, emergency survival kits (72-hour).</li>
+            </ul>
+            <p>Last telemetry from personnel bio-monitors ceased at 09:17:32 PST, concurrent with peak energy readings from the CRFG.</p>
+
+            <h3>3. DESTINATION ANALYSIS (PRELIMINARY)</h3>
+            <p>A micro-second data burst was received from MSA-04 immediately prior to signal loss. Analysis of atmospheric composition, radiation levels, and preliminary paleomagnetic readings strongly suggest a temporal displacement to the Mesozoic Era, specifically the late Cretaceous period (approx. 68-66 Million Years BP).</p>
+            <p>Observed environmental markers from the data burst include: significantly elevated CO2 levels, high humidity, dominant flora (ferns, cycads, early angiosperms), and detection of large, unidentified biological masses consistent with saurian life forms.</p>
+
+            <h3>4. PRIMARY CONCERNS & IMPLICATIONS</h3>
+            <ul>
+                <li><strong>Personnel Safety & Recovery:</strong> The immediate welfare of Expeditionary Team Delta is paramount. The destination environment is presumed extremely hostile.</li>
+                <li><strong>Paradox Containment:</strong> Introduction of modern personnel and technology into the distant past presents an incalculable risk of temporal paradoxes. All efforts must be made to mitigate this.</li>
+                <li><strong>Technological Security:</strong> Loss of advanced equipment (MSA-04) in a non-secure temporal zone is a critical concern.</li>
+                <li><strong>Public Disclosure Prevention:</strong> The nature of this incident necessitates absolute information containment.</li>
             </ul>
 
-            <h3>3. ASSESSMENT AND IMPLICATIONS</h3>
-            <p>The confirmed presence of XA-441B constitutes a significant intelligence event with major national security implications. Potential consequences include:</p>
-            <ul>
-                <li>Confirmation of advanced non-human technological presence.</li>
-                <li>Potential for significant technological gain or emergent threat vector, dependent on contact's origin and intent.</li>
-                <li>Requirement for immediate review of current defense posture and contingency protocols.</li>
-            </ul>
-
-            <h3>4. RECOMMENDED ACTIONS</h3>
-            <p>Based on current information, the following actions are directed:</p>
+            <h3>5. RECOMMENDED IMMEDIATE ACTIONS</h3>
             <ol>
-                <li>Implement INFOSEC PROTOCOL RED (Full Spectrum Information Control).</li>
-                <li>Enhance surveillance and security of RAZ DELTA.</li>
-                <li>Develop phased plan for detailed study of XA-441B, prioritizing non-invasive methods.</li>
-                <li>Brief designated Allied liaisons per AGREEMENT SIERRA-TANGO, under strict compartmentation.</li>
-                <li>Review and update CONTINGENCY PLAN ZULU-7 (Anomalous Contact Response).</li>
+                <li>Maintain PROTOCOL TITAN at Site Gamma-7. Secure all CRFG research data.</li>
+                <li>Initiate continuous attempts to re-establish communication with Expeditionary Team Delta via experimental tachyon pulse (Project ECHO).</li>
+                <li>Task JCOC Temporal Mechanics Division with assessing retrieval feasibility and developing a preliminary retrieval/neutralization plan (Operation HEIMDALL). Prioritize non-paradoxical solutions.</li>
+                <li>Activate MEDIA BLACKOUT DIRECTIVE 7. Prepare disinformation campaign (Codename: DESERT MIRAGE) if necessary.</li>
+                <li>Convene emergency session of the Temporal Oversight Committee.</li>
             </ol>
-            <p class="text-red"><strong>WARNING: This information is classified TOP SECRET//SI-GAMMA. Unauthorized disclosure is a violation of federal law and will be prosecuted.</strong></p>
+            <p class="text-red"><strong>WARNING: This information is classified TOP SECRET//SCI-TEMPORAL. Unauthorized disclosure will result in immediate and severe punitive action.</strong></p>
         </div>
 
         <div class="action-buttons-container">
-            <button class="action-btn" data-infoid="xr73Analysis">View Tech Annex 1A (Material)</button>
-            <button class="action-btn" data-infoid="commsLogs">View Comm Log Excerpt</button>
-            <button class="action-btn" data-infoid="contingencyProtocol">View Zulu-7 Protocol Summary</button>
-            <button class="action-btn" data-infoid="decemberDirective">View Directive 07-ALPHA</button>
+            <button class="action-btn" data-infoid="personnelManifest">View Personnel Manifest (TDI-2024-001-G7)</button>
+            <button class="action-btn" data-infoid="telemetryData">View CRFG Event Telemetry Log</button>
+            <button class="action-btn" data-infoid="mtzAssessment">View Mesozoic Target Zone Assessment</button>
+            <button class="action-btn" data-infoid="retrievalProtocol">View Operation HEIMDALL Outline</button>
+            <!-- START OF NEW HTML FOR VIDEO PLAYER BUTTON -->
+            <button class="action-btn" data-infoid="surveillanceFeed">Access Surveillance Archive (TDI-2024-001-G7)</button>
+            <!-- END OF NEW HTML FOR VIDEO PLAYER BUTTON -->
         </div>
 
-        <div class="info-section" id="info-xr73Analysis">
-            <h4>Tech Annex 1A: XA-441B Material Scan (Summary)</h4>
-            <p>Stand-off Spectroscopic Analysis (SSA) of XA-441B outer hull:</p>
+        <div class="info-section" id="info-personnelManifest">
+            <h4>Personnel Manifest & Last Known Status (TDI-2024-001-G7)</h4>
+            <p>Expeditionary Team Delta - Site Gamma-7 CRFG Test Unit 03</p>
             <table>
                 <thead>
                     <tr>
-                        <th>Component</th>
-                        <th>Est. %</th>
-                        <th>Notes</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Last Bio-Monitor Reading (09:17:32 PST)</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Metallic Alloy (Type IV-Unknown)</td>
-                        <td>~68%</td>
-                        <td class="text-yellow">Novel crystal structure. High density.</td>
+                        <td>Dr. Aris Thorne</td>
+                        <td>Lead Physicist / CRFG Specialist</td>
+                        <td>Heart Rate: 110bpm (Elevated), Temp: 37.1°C</td>
+                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
                     </tr>
                     <tr>
-                        <td>Ceramic-Polymer Composite</td>
-                        <td>~20%</td>
-                        <td>Possible EM dampening.</td>
+                        <td>Marcus Riker</td>
+                        <td>Security Chief / Excursion Lead</td>
+                        <td>Heart Rate: 95bpm (Alert), Temp: 37.0°C</td>
+                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
                     </tr>
                     <tr>
-                        <td>Element Z-Prime (Isotope Group)</td>
-                        <td>~9%</td>
-                        <td class="text-red">Theoretically unstable. Suggests advanced field containment.</td>
+                        <td>Lena Chen</td>
+                        <td>Field Engineer / MSA Operator</td>
+                        <td>Heart Rate: 105bpm (Elevated), Temp: 36.9°C</td>
+                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
                     </tr>
                     <tr>
-                        <td>Trace Organics</td>
-                        <td><2%</td>
-                        <td>Undetermined.</td>
+                        <td>Dr. Samira N’Goma</td>
+                        <td>Astrobiologist / Env. Specialist</td>
+                        <td>Heart Rate: 115bpm (Stressed), Temp: 37.2°C</td>
+                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
                     </tr>
                 </tbody>
             </table>
-            <p><strong>Energy Notes:</strong> Gravimetric readings indicate non-uniform internal mass, likely complex systems. Neutrino flux pattern currently under analysis.</p>
+            <p><strong>Note:</strong> All personnel were equipped with Class IV Hazardous Environment Suits (estimated 8-hour internal air supply, limited radiation shielding).</p>
         </div>
 
-        <div class="info-section" id="info-commsLogs">
-            <h4>Comm Log Excerpt: XA-441B Interaction Test (Protocol BEACON-3)</h4>
+        <div class="info-section" id="info-telemetryData">
+            <h4>CRFG Unit 03 Event Telemetry Log Excerpt (TDI-2024-001-G7)</h4>
             <pre>
-DTG: 200800Z JUL 24
-  TEST 01: RF Pulse (1-10GHz Prime Seq.)
-  RESULT: NEGATIVE RESPONSE. SIG UNCHANGED.
----
-DTG: 201430Z JUL 24
-  TEST 02: Optical Tx (1550nm Math Const.)
-  RESULT: NEGATIVE RESPONSE. LOCALIZED ABSORPTION NOTED.
----
-DTG: 210215Z JUL 24
-  TEST 03: Sub-Aquatic Sonar (10-500Hz Var.)
-  RESULT: <span class="text-yellow">ANOMALY:</span> TRANSIENT RESONANCE AT 188.3HZ. MINOR NEUTRINO SPIKE. NO COMMS.
----
-[TESTING SUSPENDED PER DIR 07-ALPHA]
+TIMESTAMP (PST) | EVENT                     | READING/VALUE
+-----------------|---------------------------|-------------------------
+09:17:28.003     | RESONANCE FIELD INITIATED | STABLE @ 7.7 THZ
+09:17:29.510     | ENERGY INPUT INCREASE     | 85% NOMINAL POWER
+09:17:30.115     | <span class="text-yellow">ANOMALY DETECTED</span>      | UNEXPECTED TAU PARTICLE FLUX
+09:17:30.880     | CONTAINMENT FIELD STRESS  | 115% OF MAX TOLERANCE
+09:17:31.205     | <span class="text-red">CASCADE WARNING</span>         | CHRONITON DENSITY SPIKE
+09:17:31.550     | TEMPORAL APERTURE FORMING | DIAMETER EST: 0.5M
+09:17:31.995     | APERTURE EXPANSION        | DIAMETER EST: 3.2M
+09:17:32.010     | PERSONNEL BIO-MON LOSS    | ALL CHANNELS OFFLINE
+09:17:32.015     | MSA-04 DATA BURST RX      | DURATION: 875 MICROSEC
+09:17:32.100     | APERTURE COLLAPSE         | RESIDUAL TACHYON DECAY
+09:17:33.500     | CRFG EMERGENCY SHUTDOWN   | SYSTEM OFFLINE
+09:17:35.000     | SITE GAMMA-7 LOCKDOWN     | PROTOCOL TITAN ACTIVE
             </pre>
         </div>
 
-        <div class="info-section" id="info-contingencyProtocol">
-            <h4>Contingency Plan ZULU-7 (XA-441B) - Summary</h4>
-            <p>Response levels for XA-441B status changes:</p>
+        <div class="info-section" id="info-mtzAssessment">
+            <h4>Mesozoic Target Zone (MTZ) Assessment - Preliminary (Based on MSA-04 Burst)</h4>
+            <p>Data received from Mobile Sensor Array (MSA-04) prior to signal loss indicates displacement to a terrestrial environment consistent with Earth's Late Cretaceous Period.</p>
             <ul>
-                <li><strong>LEVEL 4 (Info Breach):</strong> INFOSEC PROTOCOL BLACK. Counter-intel ops.</li>
-                <li><strong>LEVEL 3 (Activation - Non-Hostile):</strong> RAZ DELTA heightened alert. Monitor. Attempt contact (PROTOCOL BEACON-3 REV B).</li>
-                <li><strong>LEVEL 2 (Activation - Ambiguous/Threat):</strong> QRF deployment. Prep EVAC ORDER BRAVO. Non-lethal deterrents authorized.</li>
-                <li><strong>LEVEL 1 (Hostile Action):</strong> Full engagement authority. DEFCON protocols apply.</li>
+                <li><strong>Atmospheric Composition:</strong>
+                    <ul>
+                        <li>Oxygen: ~26-30% (Higher than present)</li>
+                        <li>Carbon Dioxide: ~1000-1500 ppm (Significantly elevated)</li>
+                        <li>Nitrogen: Dominant, similar to present levels.</li>
+                    </ul>
+                </li>
+                <li><strong>Ambient Temperature (Est.):</strong> 25-30°C (Local reading, likely tropical/subtropical)</li>
+                <li><strong>Radiation Levels:</strong> Background solar/cosmic radiation within expected parameters for the period. No anomalous localized radiation sources detected in the brief scan.</li>
+                <li><strong>Dominant Flora (Visual/Spectral):</strong> Dense vegetation. Strong signatures of ferns, cycads, conifers, and early flowering plants (angiosperms). No grasses detected.</li>
+                <li><strong>Fauna (Acoustic/Seismic/Thermal):</strong>
+                    <ul>
+                        <li>Multiple large (est. >500kg) thermal signatures detected within 1km radius.</li>
+                        <li>Low-frequency vocalizations and heavy ground tremors recorded, consistent with large terrestrial vertebrates.</li>
+                        <li><span class="text-yellow">Caution:</span> MSA-04 passive sensors registered rapid movement of a large predatory form (est. length 9-12m) approaching the MSA's last known position.</li>
+                    </ul>
+                </li>
             </ul>
-            <p class="text-red"><strong>ZULU-7 subject to revision.</strong></p>
+            <p class="text-red"><strong>Conclusion:</strong> Environment is viable for human short-term survival with appropriate protection but presents extreme biological hazards.</p>
         </div>
 
-        <div class="info-section" id="info-decemberDirective">
-            <h4>Directive 07-ALPHA: Task Group 7.3 Operational Mandate (XA-441B)</h4>
-            <p>Effective Immediately.</p>
-            <ol>
-                <li><strong>Secrecy:</strong> TOP SECRET//SI-GAMMA classification is paramount.</li>
-                <li><strong>Scientific Team:</strong> Form Joint Analysis Group (JAG) for XA-441B study. Non-invasive methods prioritized.</li>
-                <li><strong>Defense Posture:</strong> Expedite PROJECT AEGIS upgrades.</li>
-                <li><strong>Allied Liaison:</strong> Brief AGREEMENT SIERRA-TANGO partners via secure channels.</li>
-                <li><strong>Resources:</strong> Task Group 7.3 assigned Priority Alpha for resources.</li>
-                <li><strong>Comms Moratorium:</strong> Suspend active signaling pending JAG assessment.</li>
-            </ol>
-            <p class="text-yellow"><strong>This directive is binding.</strong></p>
-            <p>AUTHORIZED: [REDACTED]</p>
+        <div class="info-section" id="info-retrievalProtocol">
+            <h4>Operation HEIMDALL: Retrieval/Neutralization Protocol Outline (Theoretical)</h4>
+            <p><strong>OBJECTIVE:</strong> Recover Expeditionary Team Delta and associated technology, or neutralize assets to prevent paradox/technological contamination.</p>
+            <p><strong>PHASE 1: Reconnaissance & Contact (Current)</strong></p>
+            <ul>
+                <li>Utilize Project ECHO tachyon pulse system to attempt one-way communication (coded signals).</li>
+                <li>Deploy long-range temporal probes (if CRFG Unit 04 can be safely brought online) for passive observation of MTZ. Target: Last known coordinates of MSA-04.</li>
+            </ul>
+            <p><strong>PHASE 2: Manned Retrieval Attempt (High Risk - Contingent on CRFG Unit 04 Stability & Favorable Intel)</strong></p>
+            <ul>
+                <li>Requires precise recalibration of CRFG for targeted, stable aperture generation to MTZ. <span class="text-yellow">Current models predict instability.</span></li>
+                <li>Deployment of specialized Temporal Retrieval Team (TRT) with enhanced environmental protection and defensive capabilities.</li>
+                <li>Strict time limit for on-site operations in MTZ (est. < 1 hour) to minimize exposure and paradox risk.</li>
+            </ul>
+            <p><strong>PHASE 3: Asset Neutralization (If Retrieval Fails or Deemed Unacceptably Risky)</strong></p>
+            <ul>
+                <li>Remote targeting of MSA-04 self-destruct mechanism via focused temporal pulse (theoretical).</li>
+                <li><span class="text-red">Extreme Contingency:</span> Controlled destabilization of CRFG Unit 04 to "cleanse" temporal pathway. Collateral damage to Site Gamma-7 and surrounding area considered catastrophic but potentially acceptable to prevent large-scale paradox. Requires NCA direct approval.</li>
+            </ul>
+            <p><strong>PRIMARY DIRECTIVE:</strong> Prevent temporal contamination. Personnel recovery is secondary if it conflicts with the primary directive.</p>
         </div>
 
+        <!-- START OF NEW HTML FOR VIDEO PLAYER SECTION -->
+        <div class="info-section" id="info-surveillanceFeed">
+            <h4>Surveillance Archive Footage (MSA-04 Last Transmission Fragment)</h4>
+            <p>Recovered visual data fragment from Mobile Sensor Array (MSA-04) before complete signal loss. Audio corrupted.</p>
+            <div class="video-player-container">
+                <video id="customVideoPlayer" src="warning.mp4" poster="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">
+                    Your browser does not support the video tag.
+                    <!-- YOU MUST REPLACE placeholder_video.mp4 with your video file -->
+                    <!-- The poster is a black 1x1 pixel gif to hide initial video frame if not auto-playing -->
+                </video>
+                <div class="custom-controls">
+                    <button id="playPauseBtn">PLAY</button>
+                    <button id="rewindBtn">RW</button> <!-- Rewind 5s -->
+                    <button id="forwardBtn">FF</button> <!-- Forward 5s -->
+                    <div class="seek-bar-container" id="seekBarContainer">
+                        <div class="seek-bar-progress" id="seekBarProgress"></div>
+                    </div>
+                    <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                    <div class="volume-controls">
+                        <button id="muteBtn">MUTE</button>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+                        <button id="volDownBtn">-</button>
+                        <button id="volUpBtn">+</button>
+                    </div>
+                    <button id="fullscreenBtn">FS</button>
+                </div>
+            </div>
+            <p class="text-yellow" style="text-align:center; font-size:0.8em; margin-top:5px;">NOTE: Data integrity questionable. Visual artifacts may be present.</p>
+        </div>
+        <!-- END OF NEW HTML FOR VIDEO PLAYER SECTION -->
 
-        <div class="classification-header bottom">TOP SECRET // SI-GAMMA // EYES ONLY</div>
+
+        <div class="classification-header bottom">TOP SECRET // SCI-TEMPORAL // EYES ONLY</div>
     </div>
 
     <div class="password-modal" id="actionPasswordModal">
@@ -522,7 +678,7 @@ DTG: 210215Z JUL 24
             <div class="legal-terms-text-area" id="legalTermsTextArea">
                 <p><strong>NOTICE TO ALL PERSONNEL ACCESSING THIS SYSTEM:</strong></p>
                 <p>By proceeding beyond this point and accessing any data contained within this system ("System"), you ("User") hereby acknowledge, understand, and expressly agree to the following terms and conditions. Failure to comply with these terms may result in severe administrative, civil, and/or criminal penalties, including but not limited to termination of access, employment termination, fines, and imprisonment under applicable federal and international law.</p>
-                <p><strong>1. CLASSIFICATION AND HANDLING:</strong> All information contained within or accessed through this System is classified at a minimum level of TOP SECRET//SI-GAMMA or higher, unless explicitly marked otherwise. User agrees to handle all such information in strict accordance with U.S. Government regulations, agency-specific directives (including but not limited to Directive 00-ALPHA-SECURITY), and all relevant non-disclosure agreements (NDAs) signed by the User. No information may be copied, transmitted, discussed, or removed from authorized secure facilities or networks without explicit, written authorization from the designated cognizant security authority (CSA).</p>
+                <p><strong>1. CLASSIFICATION AND HANDLING:</strong> All information contained within or accessed through this System is classified at a minimum level of TOP SECRET//SCI-TEMPORAL or higher, unless explicitly marked otherwise. User agrees to handle all such information in strict accordance with U.S. Government regulations, agency-specific directives (including but not limited to Directive 00-ALPHA-SECURITY), and all relevant non-disclosure agreements (NDAs) signed by the User. No information may be copied, transmitted, discussed, or removed from authorized secure facilities or networks without explicit, written authorization from the designated cognizant security authority (CSA).</p>
                 <p><strong>2. AUTHORIZED USE ONLY:</strong> Access to this System is granted solely for official U.S. Government duties as authorized by User's direct chain of command and validated security clearance. Any access or attempted access for personal use, unauthorized research, or any purpose not directly related to assigned official duties is strictly prohibited and will be logged and investigated.</p>
                 <p><strong>3. MONITORING AND AUDIT:</strong> User acknowledges that all activities on this System, including keystrokes, data access, file transfers, and communication attempts, are subject to continuous monitoring, recording, and auditing by authorized U.S. Government personnel without further notice. This monitoring is conducted for purposes of system security, maintenance, law enforcement, counterintelligence, and to ensure compliance with all applicable regulations and policies. There is no expectation of privacy when using this System.</p>
                 <p><strong>4. DATA INTEGRITY AND SECURITY INCIDENTS:</strong> User is responsible for maintaining the integrity and security of all data accessed. Any suspected or actual security incident, data spillage, unauthorized disclosure, or suspicious activity must be reported IMMEDIATELY to the System Security Officer (SSO) or the designated incident response team through established reporting channels.</p>
@@ -653,6 +809,196 @@ DTG: 210215Z JUL 24
                 legalTermsModal.style.display = 'none';
             }
         });
+
+        // START OF NEW JAVASCRIPT FOR VIDEO PLAYER - DO NOT MODIFY JS ABOVE THIS LINE
+        const video = document.getElementById('customVideoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const seekBarContainer = document.getElementById('seekBarContainer');
+        const seekBarProgress = document.getElementById('seekBarProgress');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volDownBtn = document.getElementById('volDownBtn');
+        const volUpBtn = document.getElementById('volUpBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const videoPlayerContainer = document.querySelector('.video-player-container'); // For fullscreen
+
+        let eyesBlinkTriggered = false; // Flag to ensure blink happens only once
+        let originalBodyBackground = '';
+
+        // Play/Pause
+        playPauseBtn.addEventListener('click', () => {
+            if (video.paused || video.ended) {
+                video.play();
+                playPauseBtn.textContent = 'PAUSE';
+            } else {
+                video.pause();
+                playPauseBtn.textContent = 'PLAY';
+            }
+        });
+
+        // Rewind 5s
+        rewindBtn.addEventListener('click', () => {
+            video.currentTime = Math.max(0, video.currentTime - 5);
+        });
+
+        // Forward 5s
+        forwardBtn.addEventListener('click', () => {
+            video.currentTime = Math.min(video.duration, video.currentTime + 5);
+        });
+
+        // Time update for seek bar and time display
+        video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            seekBarProgress.style.width = progress + '%';
+            timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration || 0);
+
+            // Background blink effect at 0:40
+            if (video.currentTime >= 40 && video.currentTime < 41 && !eyesBlinkTriggered) {
+                eyesBlinkTriggered = true; // Set flag
+                triggerEyesBlink();
+            }
+        });
+        
+        // Reset blink trigger if video starts over or is seeked before 40s
+        video.addEventListener('seeking', () => {
+            if (video.currentTime < 40) {
+                eyesBlinkTriggered = false;
+                // Ensure background is normal if seeking away from the blink time
+                if (document.body.style.backgroundImage.includes('eyes.jpg')) {
+                    document.body.style.backgroundImage = originalBodyBackground;
+                }
+            }
+        });
+         video.addEventListener('seeked', () => { // Double check after seek
+            if (video.currentTime < 40 && eyesBlinkTriggered) {
+                 eyesBlinkTriggered = false;
+                 if (document.body.style.backgroundImage.includes('eyes.jpg')) {
+                    document.body.style.backgroundImage = originalBodyBackground;
+                }
+            }
+        });
+         video.addEventListener('ended', () => {
+            playPauseBtn.textContent = 'PLAY';
+            eyesBlinkTriggered = false; // Reset on video end
+         });
+
+
+        // Seek bar click
+        seekBarContainer.addEventListener('click', (e) => {
+            const rect = seekBarContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = seekBarContainer.clientWidth;
+            const duration = video.duration;
+            video.currentTime = (clickX / width) * duration;
+        });
+
+        // Mute/Unmute
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
+            volumeSlider.value = video.muted ? 0 : video.volume;
+        });
+
+        // Volume Slider
+        volumeSlider.addEventListener('input', () => {
+            video.volume = volumeSlider.value;
+            video.muted = volumeSlider.value == 0;
+            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
+        });
+
+        // Volume Down
+        volDownBtn.addEventListener('click', () => {
+            video.volume = Math.max(0, video.volume - 0.1);
+            volumeSlider.value = video.volume;
+             video.muted = video.volume == 0;
+            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
+        });
+
+        // Volume Up
+        volUpBtn.addEventListener('click', () => {
+            video.volume = Math.min(1, video.volume + 0.1);
+            volumeSlider.value = video.volume;
+            video.muted = false; // Unmute if volume is turned up
+            muteBtn.textContent = 'MUTE';
+        });
+
+        // Fullscreen
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                if (videoPlayerContainer.requestFullscreen) {
+                    videoPlayerContainer.requestFullscreen();
+                } else if (videoPlayerContainer.mozRequestFullScreen) { /* Firefox */
+                    videoPlayerContainer.mozRequestFullScreen();
+                } else if (videoPlayerContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                    videoPlayerContainer.webkitRequestFullscreen();
+                } else if (videoPlayerContainer.msRequestFullscreen) { /* IE/Edge */
+                    videoPlayerContainer.msRequestFullscreen();
+                }
+                fullscreenBtn.textContent = 'EXIT FS';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                fullscreenBtn.textContent = 'FS';
+            }
+        });
+         document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.textContent = 'FS';
+            }
+        });
+
+
+        // Helper function to format time
+        function formatTime(timeInSeconds) {
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = Math.floor(timeInSeconds % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Function for background blink effect
+        function triggerEyesBlink() {
+            originalBodyBackground = document.body.style.background; // Store current background
+            
+            // Ensure eyes.jpg is available - replace with your actual image path
+            const eyesImageUrl = 'url(eyes.jpg)'; 
+
+            // Blink 1
+            setTimeout(() => {
+                document.body.style.backgroundImage = eyesImageUrl;
+                document.body.style.backgroundSize = 'cover'; // Or 'contain', 'auto'
+                document.body.style.backgroundRepeat = 'no-repeat';
+                document.body.style.backgroundPosition = 'center center';
+            }, 0);
+            setTimeout(() => {
+                document.body.style.backgroundImage = ''; // Clear image
+                document.body.style.background = originalBodyBackground; // Restore original
+            }, 100); // Blink duration
+
+            // Blink 2
+            setTimeout(() => {
+                document.body.style.backgroundImage = eyesImageUrl;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundRepeat = 'no-repeat';
+                document.body.style.backgroundPosition = 'center center';
+            }, 200);
+            setTimeout(() => {
+                document.body.style.backgroundImage = ''; // Clear image
+                document.body.style.background = originalBodyBackground; // Restore original
+            }, 300); // Blink duration
+        }
+        
+        // Ensure video is loaded before trying to get duration
+        video.addEventListener('loadedmetadata', () => {
+            timeDisplay.textContent = formatTime(0) + ' / ' + formatTime(video.duration);
+            volumeSlider.value = video.volume; // Initialize slider based on video's current volume
+        });
+
+
+        // END OF NEW JAVASCRIPT FOR VIDEO PLAYER
     </script>
 
 </body>
