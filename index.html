@@ -3,1003 +3,414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECURE ACCESS TERMINAL</title>
+    <title>Chat about random things lol</title>
     <style>
+        :root {
+            --xp-bg: #ECE9D8;
+            --xp-blue: #0055E7;
+            --xp-blue-gradient-end: #3B93FF;
+            --xp-text: #000000;
+            --xp-window-border: #ACA899;
+            --xp-desktop-bg: #3A6EA5;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #e0e0e0;
-            color: #000000;
+            font-family: Tahoma, Geneva, sans-serif;
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 10px;
-            line-height: 1.5;
-            font-size: 14px;
-            transition: background-image 0.05s ease-in-out; /* For smooth blink transition */
+            background-color: var(--xp-desktop-bg);
+            color: var(--xp-text);
+            animation: fadeIn 0.3s ease-in;
         }
-
-        .password-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .app-container {
             width: 100%;
-            height: 100%;
-            background-color: #c0c0c0;
+            max-width: 640px;
+            height: 90vh;
+            max-height: 700px;
+            background-color: var(--xp-bg);
+            border: 1px solid var(--xp-window-border);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            overflow: hidden;
+            border: 2px outset #fff;
+        }
+        .hidden { display: none !important; }
+
+        .title-bar {
+            background: linear-gradient(to bottom, var(--xp-blue), var(--xp-blue-gradient-end));
+            color: #fff;
+            padding: 4px 6px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            padding: 20px;
-            box-sizing: border-box;
-            border: 5px solid #808080;
+            user-select: none;
         }
-
-        .password-overlay h2,
-        .password-modal-content h3 {
-            color: #000000;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #000000;
-            padding-bottom: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
+        
+        #auth-view { padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%; background-color: var(--xp-bg); }
+        .auth-form { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .auth-form input {
+            padding: 5px;
+            font-family: Tahoma, sans-serif;
+            font-size: 11px;
+            border: 1px solid var(--xp-window-border);
+            box-shadow: inset 1px 1px 2px #777;
+            background-color: #fff;
         }
-        .password-modal-content h3 {
-             font-size: 1.1em;
-        }
-
-
-        .password-overlay input[type="password"],
-        .password-modal input[type="password"] {
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #333333;
-            background-color: #ffffff;
-            color: #000000;
-            font-family: monospace;
-            font-size: 1em;
-            width: 250px;
-            box-shadow: inset 1px 1px 2px #888;
-        }
-        .password-overlay input[type="password"]:focus,
-        .password-modal input[type="password"]:focus {
-            outline: 1px solid #000080;
-            background-color: #f0f8ff;
-        }
-
-        .password-overlay button,
-        .password-modal button {
-            padding: 8px 15px;
-            background-color: #b0b0b0;
-            color: #000000;
-            border: 1px outset #808080;
+        .auth-button {
+            font-family: Tahoma, sans-serif;
+            font-size: 11px;
+            padding: 5px 15px;
+            background-color: var(--xp-bg);
+            border: 2px outset #fff;
             cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
         }
-        .password-overlay button:hover,
-        .password-modal button:hover {
-            background-color: #a0a0a0;
-        }
-        .password-overlay button:active,
-        .password-modal button:active {
-            border-style: inset;
-        }
+        .auth-button:active { border-style: inset; }
+        .form-actions { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        #auth-error { color: #A00; text-align: center; min-height: 20px; margin-top: 10px; }
+        .form-toggle { color: #0000EE; cursor: pointer; text-decoration: underline; text-align: center; margin-top: 15px; }
 
-
-        .password-error {
-            color: #cc0000;
-            margin-top: 10px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .main-content {
-            display: none;
-            padding: 15px;
-            max-width: 800px;
-            margin: 20px auto;
-            border: 2px solid #000000;
-            background-color: #f0f0f0;
-        }
-
-        .classification-header {
-            background-color: #800000;
-            color: #ffffff;
-            padding: 5px 10px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.1em;
-            letter-spacing: 1px;
-            margin: -15px -15px 20px -15px;
-            border-bottom: 2px solid #000000;
-            font-family: "Courier New", Courier, monospace;
-        }
-        .classification-header.bottom {
-            margin: 20px -15px -15px -15px;
-            border-top: 2px solid #000000;
-            border-bottom: none;
-        }
-
-        .document-header {
-            border-bottom: 1px solid #808080;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 0.9em;
-        }
-        .document-header p {
-            margin: 4px 0;
-        }
-        .document-header strong {
-            display: inline-block;
-            width: 150px;
-            color: #333333;
-            font-weight: bold;
-        }
-
-        .message-body h3 {
-            color: #000000;
-            border-bottom: 1px solid #808080;
-            padding-bottom: 5px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .message-body p, .message-body ul, .message-body ol {
-            margin-bottom: 12px;
-            font-size: 0.95em;
-        }
-        .message-body ul {
-            padding-left: 20px;
-            list-style-type: square;
-        }
-        .message-body ol {
-            padding-left: 25px;
-        }
-
-        .action-buttons-container {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #808080;
-            text-align: left;
-        }
-        .action-buttons-container button.action-btn {
-            background-color: #d3d3d3;
-            color: #000000;
-            border: 1px solid #505050;
-            padding: 6px 10px;
-            margin: 5px 5px 5px 0;
-            cursor: pointer;
-            font-size: 0.85em;
-            text-transform: none;
-            font-weight: normal;
-        }
-        .action-buttons-container button.action-btn:hover {
-            background-color: #c0c0c0;
-        }
-
-        .password-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(128, 128, 128, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 900;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .password-modal-content {
-            background-color: #e0e0e0;
-            padding: 20px;
-            border: 2px solid #000000;
-            text-align: center;
-            position: relative;
-            width: 400px;
-        }
-        .close-modal-btn {
+        #chat-view { display: flex; flex-direction: column; height: 100%; width: 100%; }
+        #profile-area { display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid transparent; padding: 2px; }
+        #profile-area:hover { border: 1px dotted #fff; }
+        #profile-pfp { width: 24px; height: 24px; border: 1px inset #fff; }
+        
+        #profile-dropdown {
             position: absolute;
-            top: 5px;
-            right: 8px;
-            font-size: 1.2em;
-            font-family: "Courier New", Courier, monospace;
-            font-weight: bold;
-            color: #000000;
-            background: none;
-            border: none;
-            cursor: pointer;
+            top: 32px;
+            right: 5px;
+            background-color: var(--xp-bg);
+            border: 2px outset #fff;
+            box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+            z-index: 100;
         }
-        .close-modal-btn:hover {
-            color: #cc0000;
-        }
+        .dropdown-item { padding: 5px 25px 5px 15px; cursor: pointer; }
+        .dropdown-item:hover { background-color: var(--xp-blue); color: #fff; }
 
-        .info-section {
-            display: none;
-            margin-top: 20px;
+        #message-display {
+            flex-grow: 1;
             padding: 10px;
-            border: 1px dashed #505050;
-            background-color: #e8e8e8;
+            overflow-y: scroll;
+            background-color: #fff;
+            border-top: 1px solid var(--xp-window-border);
+            border-bottom: 1px solid var(--xp-window-border);
+            box-shadow: inset 1px 1px 2px #777;
         }
-        .info-section h4 {
-            color: #000080;
-            margin-top: 0;
-            border-bottom: 1px solid #000080;
-            padding-bottom: 5px;
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .info-section pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #f8f8f8;
-            padding: 8px;
-            border: 1px solid #808080;
-            max-height: 180px;
-            overflow-y: auto;
-            font-size: 0.85em;
-            font-family: "Courier New", Courier, monospace;
-            line-height: 1.4;
-        }
-        .info-section table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-        }
-        .info-section th, .info-section td {
-            border: 1px solid #505050;
-            padding: 5px;
-            text-align: left;
-        }
-        .info-section th {
-            background-color: #c0c0c0;
-            font-weight: bold;
-        }
+        .message { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; }
+        .message-pfp { width: 32px; height: 32px; border: 1px inset #ccc; flex-shrink: 0; }
+        .message-body { display: flex; flex-direction: column; }
+        .sender-name { font-weight: bold; }
+        .message.mine .sender-name { color: #0000C8; }
+        .message.other .sender-name { color: #C80000; }
+        
+        #message-form { display: flex; padding: 10px; gap: 10px; align-items: center; }
+        #message-input { flex-grow: 1; font-family: Tahoma, sans-serif; padding: 5px; border: 1px solid var(--xp-window-border); box-shadow: inset 1px 1px 2px #777; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; z-index: 200; }
+        .modal-content { background: var(--xp-bg); padding: 2px; border: 2px outset #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.4); }
+        .modal-content .title-bar { cursor: move; }
+        .modal-body { padding: 20px; }
 
-        .text-red { color: #b30000; font-weight: bold; }
-        .text-yellow { color: #996600; font-weight: bold; }
-        .text-green { color: #006400; font-weight: bold; }
-
-        .agreement-container {
-            margin-top: 15px;
-            margin-bottom: 10px;
-            font-size: 0.85em;
-            text-align: left;
-            width: 270px;
-        }
-        .agreement-container input[type="checkbox"] {
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-        .agreement-container label {
-            vertical-align: middle;
-        }
-        .view-agreement-link {
-            color: #000080;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-left: 5px;
-        }
-        .view-agreement-link:hover {
-            color: #0000cc;
-        }
-
-        .legal-terms-modal-overlay {
-            display: none;
+        #warning-window {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(100, 100, 100, 0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            padding: 20px;
-            box-sizing: border-box;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: var(--xp-bg);
+            border: 2px outset #fff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            z-index: 500;
         }
-        .legal-terms-modal-content {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border: 2px solid #000000;
-            width: 90%;
-            max-width: 600px;
-            height: 70%;
-            max-height: 500px;
-            display: flex;
-            flex-direction: column;
-        }
-        .legal-terms-modal-content h3 {
-            color: #000000;
-            margin-top: 0;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #000000;
-            padding-bottom: 5px;
-            font-size: 1.1em;
-        }
-        .legal-terms-text-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            border: 1px solid #808080;
-            padding: 10px;
-            background-color: #ffffff;
-            font-family: "Times New Roman", Times, serif;
-            font-size: 0.9em;
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-        .legal-terms-modal-content button {
-            padding: 8px 15px;
-            background-color: #b0b0b0;
-            color: #000000;
-            border: 1px outset #808080;
-            cursor: pointer;
-            font-weight: bold;
-            align-self: center;
-        }
-        .legal-terms-modal-content button:hover {
-            background-color: #a0a0a0;
-        }
-
-        /* START OF NEW CSS FOR VIDEO PLAYER - DO NOT MODIFY CSS ABOVE THIS LINE */
-        .video-player-container {
-            width: 100%;
-            max-width: 640px; /* Adjust as needed */
-            margin: 15px auto;
-            background-color: #a0a0a0; /* Darker grey for player housing */
-            border: 2px solid #333;
-            padding: 5px;
-            box-sizing: border-box;
-        }
-        .video-player-container video {
-            width: 100%;
-            display: block;
-            background-color: #000; /* Black background for video area */
-        }
-        .custom-controls {
-            background-color: #b0b0b0; /* Lighter grey for controls bar */
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            border-top: 1px solid #333;
-            font-family: "Courier New", Courier, monospace;
-        }
-        .custom-controls button {
-            background-color: #c0c0c0;
-            border: 1px outset #505050;
-            color: #000;
-            padding: 4px 8px;
-            margin-right: 5px;
-            cursor: pointer;
-            font-size: 0.8em;
-        }
-        .custom-controls button:hover {
-            background-color: #afafaf;
-        }
-         .custom-controls button:active {
-            border-style: inset;
-        }
-        .seek-bar-container {
-            flex-grow: 1;
-            background-color: #505050; /* Dark track for seek bar */
-            height: 10px;
-            margin: 0 5px;
-            cursor: pointer;
-            position: relative;
-            border: 1px solid #333;
-        }
-        .seek-bar-progress {
-            background-color: #008000; /* Green progress */
-            height: 100%;
-            width: 0%; /* Initial width */
-        }
-        .time-display {
-            font-size: 0.8em;
-            margin: 0 5px;
-            min-width: 70px; /* To prevent layout shift */
-            text-align: center;
-        }
-        .volume-controls {
-            display: flex;
-            align-items: center;
-        }
-        .volume-controls input[type="range"] {
-            width: 60px; /* Simple volume slider */
-            height: 8px;
-            margin: 0 5px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #505050;
-            outline: none;
-            cursor: pointer;
-            border: 1px solid #333;
-        }
-        .volume-controls input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 8px;
-            height: 12px;
-            background: #c0c0c0;
-            border: 1px solid #333;
-            cursor: pointer;
-        }
-        .volume-controls input[type="range"]::-moz-range-thumb {
-            width: 8px;
-            height: 12px;
-            background: #c0c0c0;
-            border: 1px solid #333;
-            cursor: pointer;
-            border-radius: 0;
-        }
-        /* END OF NEW CSS FOR VIDEO PLAYER */
-
+        #warning-window .title-bar { background: linear-gradient(to bottom, #F99B1D, #FEBD54); }
+        #warning-window .modal-body { display: flex; align-items: flex-start; gap: 10px; }
+        #warning-window .warning-icon { font-size: 24px; color: #F99B1D; }
     </style>
 </head>
 <body>
-
-    <div class="password-overlay" id="initialPasswordOverlay">
-        <h2>SYSTEM LOGIN</h2>
-        <p style="color: #333; margin-bottom:15px; text-align:center; font-size:0.9em;">Enter Authentication Code.</p>
-        <input type="password" id="initialPasswordInput" placeholder="CODE">
-        
-        <div class="agreement-container">
-            <input type="checkbox" id="agreementCheckbox">
-            <label for="agreementCheckbox">I acknowledge and agree to the
-                <span class="view-agreement-link" id="viewAgreementBtn">terms of use</span>.
-            </label>
+    <div class="app-container">
+        <div id="auth-view">
+            <div id="login-form">
+                <div class="title-bar">User Login</div>
+                <form class="auth-form" style="padding: 20px;">
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" required>
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required>
+                    <div class="form-actions"><button type="button" id="login-btn" class="auth-button">Log In</button></div>
+                </form>
+                <p id="login-form-toggle" class="form-toggle">Create a new account</p>
+            </div>
+            <div id="signup-form" class="hidden">
+                <div class="title-bar">Create New Account</div>
+                <form class="auth-form" style="padding: 20px;">
+                    <label for="signup-username">Username:</label>
+                    <input type="text" id="signup-username" required>
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" required>
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" required>
+                    <div class="form-actions"><button type="button" id="signup-btn" class="auth-button">Sign Up</button></div>
+                </form>
+                <p id="signup-form-toggle" class="form-toggle">Return to Login</p>
+            </div>
+            <p id="auth-error"></p>
         </div>
 
-        <button onclick="checkInitialPassword()" id="initialSubmitButton">SUBMIT</button>
-        <p class="password-error" id="initialPasswordError"></p>
+        <div id="chat-view" class="hidden">
+            <header class="title-bar">
+                <span>Chat about random things lol</span>
+                <div id="profile-area">
+                    <span id="profile-username"></span>
+                    <img id="profile-pfp" src="" alt="PFP">
+                </div>
+            </header>
+            <div id="profile-dropdown" class="hidden">
+                <div class="dropdown-item" id="change-username-btn">Change Username...</div>
+                <div class="dropdown-item" id="change-pfp-btn">Change Picture...</div>
+                <hr style="border: 0; border-top: 1px solid #999; margin: 0;">
+                <div class="dropdown-item" id="sign-out-btn">Sign Out</div>
+            </div>
+            <main id="message-display"></main>
+            <form id="message-form">
+                <input type="text" id="message-input" autocomplete="off">
+                <button type="submit" class="auth-button">Send</button>
+            </form>
+        </div>
     </div>
-
-    <div class="main-content" id="mainContentArea">
-        <div class="classification-header">TOP SECRET // SCI-TEMPORAL // EYES ONLY</div>
-
-        <div class="document-header">
-            <p><strong>FROM:</strong> PROJECT ANCHORAGE OVERSIGHT</p>
-            <p><strong>TO:</strong> JOINT CHRONO-OPERATIONS COMMAND (JCOC)</p>
-            <p><strong>DATE:</strong> <span id="currentDate"></span></p>
-            <p><strong>SUBJECT:</strong> INCIDENT REPORT: UNCONTROLLED TEMPORAL DISPLACEMENT - SITE GAMMA-7</p>
-            <p><strong>INCIDENT ID:</strong> TDI-2024-001-G7</p>
-        </div>
-
-        <div class="message-body">
-            <h3>1. INCIDENT SUMMARY</h3>
-            <p>This report details an uncontrolled temporal displacement event (TDE) originating at Site Gamma-7 (Nevada Test and Training Range, Restricted Sector) at 09:17 PST, 19 JUL 2024. The event occurred during calibration tests of the Chronometric Resonance Field Generator (CRFG) Unit 03. An unexpected energy cascade resulted in the formation of a localized temporal aperture.</p>
-            <p>Preliminary data indicates the aperture stabilized briefly, resulting in the translocation of personnel and equipment. Site Gamma-7 is currently under full lockdown (PROTOCOL TITAN).</p>
-
-            <h3>2. AFFECTED ASSETS (PERSONNEL & EQUIPMENT)</h3>
-            <p>The following assets are confirmed to have been within the immediate vicinity of the CRFG Unit 03 containment chamber at the time of the event and are now unaccounted for:</p>
-            <ul>
-                <li>**Personnel:** Expeditionary Team Delta (4 members: Lead Physicist Dr. Aris Thorne, Security Chief M. Riker, Engineer L. Chen, Biologist Dr. S. N’Goma). All equipped with standard environmental suits and short-range communicators.</li>
-                <li>**Equipment:** Mobile Sensor Array (MSA-04), portable power unit, emergency survival kits (72-hour).</li>
-            </ul>
-            <p>Last telemetry from personnel bio-monitors ceased at 09:17:32 PST, concurrent with peak energy readings from the CRFG.</p>
-
-            <h3>3. DESTINATION ANALYSIS (PRELIMINARY)</h3>
-            <p>A micro-second data burst was received from MSA-04 immediately prior to signal loss. Analysis of atmospheric composition, radiation levels, and preliminary paleomagnetic readings strongly suggest a temporal displacement to the Mesozoic Era, specifically the late Cretaceous period (approx. 68-66 Million Years BP).</p>
-            <p>Observed environmental markers from the data burst include: significantly elevated CO2 levels, high humidity, dominant flora (ferns, cycads, early angiosperms), and detection of large, unidentified biological masses consistent with saurian life forms.</p>
-
-            <h3>4. PRIMARY CONCERNS & IMPLICATIONS</h3>
-            <ul>
-                <li><strong>Personnel Safety & Recovery:</strong> The immediate welfare of Expeditionary Team Delta is paramount. The destination environment is presumed extremely hostile.</li>
-                <li><strong>Paradox Containment:</strong> Introduction of modern personnel and technology into the distant past presents an incalculable risk of temporal paradoxes. All efforts must be made to mitigate this.</li>
-                <li><strong>Technological Security:</strong> Loss of advanced equipment (MSA-04) in a non-secure temporal zone is a critical concern.</li>
-                <li><strong>Public Disclosure Prevention:</strong> The nature of this incident necessitates absolute information containment.</li>
-            </ul>
-
-            <h3>5. RECOMMENDED IMMEDIATE ACTIONS</h3>
-            <ol>
-                <li>Maintain PROTOCOL TITAN at Site Gamma-7. Secure all CRFG research data.</li>
-                <li>Initiate continuous attempts to re-establish communication with Expeditionary Team Delta via experimental tachyon pulse (Project ECHO).</li>
-                <li>Task JCOC Temporal Mechanics Division with assessing retrieval feasibility and developing a preliminary retrieval/neutralization plan (Operation HEIMDALL). Prioritize non-paradoxical solutions.</li>
-                <li>Activate MEDIA BLACKOUT DIRECTIVE 7. Prepare disinformation campaign (Codename: DESERT MIRAGE) if necessary.</li>
-                <li>Convene emergency session of the Temporal Oversight Committee.</li>
-            </ol>
-            <p class="text-red"><strong>WARNING: This information is classified TOP SECRET//SCI-TEMPORAL. Unauthorized disclosure will result in immediate and severe punitive action.</strong></p>
-        </div>
-
-        <div class="action-buttons-container">
-            <button class="action-btn" data-infoid="personnelManifest">View Personnel Manifest (TDI-2024-001-G7)</button>
-            <button class="action-btn" data-infoid="telemetryData">View CRFG Event Telemetry Log</button>
-            <button class="action-btn" data-infoid="mtzAssessment">View Mesozoic Target Zone Assessment</button>
-            <button class="action-btn" data-infoid="retrievalProtocol">View Operation HEIMDALL Outline</button>
-            <!-- START OF NEW HTML FOR VIDEO PLAYER BUTTON -->
-            <button class="action-btn" data-infoid="surveillanceFeed">Access Surveillance Archive (TDI-2024-001-G7)</button>
-            <!-- END OF NEW HTML FOR VIDEO PLAYER BUTTON -->
-        </div>
-
-        <div class="info-section" id="info-personnelManifest">
-            <h4>Personnel Manifest & Last Known Status (TDI-2024-001-G7)</h4>
-            <p>Expeditionary Team Delta - Site Gamma-7 CRFG Test Unit 03</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Last Bio-Monitor Reading (09:17:32 PST)</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Dr. Aris Thorne</td>
-                        <td>Lead Physicist / CRFG Specialist</td>
-                        <td>Heart Rate: 110bpm (Elevated), Temp: 37.1°C</td>
-                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
-                    </tr>
-                    <tr>
-                        <td>Marcus Riker</td>
-                        <td>Security Chief / Excursion Lead</td>
-                        <td>Heart Rate: 95bpm (Alert), Temp: 37.0°C</td>
-                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
-                    </tr>
-                    <tr>
-                        <td>Lena Chen</td>
-                        <td>Field Engineer / MSA Operator</td>
-                        <td>Heart Rate: 105bpm (Elevated), Temp: 36.9°C</td>
-                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
-                    </tr>
-                    <tr>
-                        <td>Dr. Samira N’Goma</td>
-                        <td>Astrobiologist / Env. Specialist</td>
-                        <td>Heart Rate: 115bpm (Stressed), Temp: 37.2°C</td>
-                        <td class="text-yellow">Signal Lost - Presumed Displaced</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><strong>Note:</strong> All personnel were equipped with Class IV Hazardous Environment Suits (estimated 8-hour internal air supply, limited radiation shielding).</p>
-        </div>
-
-        <div class="info-section" id="info-telemetryData">
-            <h4>CRFG Unit 03 Event Telemetry Log Excerpt (TDI-2024-001-G7)</h4>
-            <pre>
-TIMESTAMP (PST) | EVENT                     | READING/VALUE
------------------|---------------------------|-------------------------
-09:17:28.003     | RESONANCE FIELD INITIATED | STABLE @ 7.7 THZ
-09:17:29.510     | ENERGY INPUT INCREASE     | 85% NOMINAL POWER
-09:17:30.115     | <span class="text-yellow">ANOMALY DETECTED</span>      | UNEXPECTED TAU PARTICLE FLUX
-09:17:30.880     | CONTAINMENT FIELD STRESS  | 115% OF MAX TOLERANCE
-09:17:31.205     | <span class="text-red">CASCADE WARNING</span>         | CHRONITON DENSITY SPIKE
-09:17:31.550     | TEMPORAL APERTURE FORMING | DIAMETER EST: 0.5M
-09:17:31.995     | APERTURE EXPANSION        | DIAMETER EST: 3.2M
-09:17:32.010     | PERSONNEL BIO-MON LOSS    | ALL CHANNELS OFFLINE
-09:17:32.015     | MSA-04 DATA BURST RX      | DURATION: 875 MICROSEC
-09:17:32.100     | APERTURE COLLAPSE         | RESIDUAL TACHYON DECAY
-09:17:33.500     | CRFG EMERGENCY SHUTDOWN   | SYSTEM OFFLINE
-09:17:35.000     | SITE GAMMA-7 LOCKDOWN     | PROTOCOL TITAN ACTIVE
-            </pre>
-        </div>
-
-        <div class="info-section" id="info-mtzAssessment">
-            <h4>Mesozoic Target Zone (MTZ) Assessment - Preliminary (Based on MSA-04 Burst)</h4>
-            <p>Data received from Mobile Sensor Array (MSA-04) prior to signal loss indicates displacement to a terrestrial environment consistent with Earth's Late Cretaceous Period.</p>
-            <ul>
-                <li><strong>Atmospheric Composition:</strong>
-                    <ul>
-                        <li>Oxygen: ~26-30% (Higher than present)</li>
-                        <li>Carbon Dioxide: ~1000-1500 ppm (Significantly elevated)</li>
-                        <li>Nitrogen: Dominant, similar to present levels.</li>
-                    </ul>
-                </li>
-                <li><strong>Ambient Temperature (Est.):</strong> 25-30°C (Local reading, likely tropical/subtropical)</li>
-                <li><strong>Radiation Levels:</strong> Background solar/cosmic radiation within expected parameters for the period. No anomalous localized radiation sources detected in the brief scan.</li>
-                <li><strong>Dominant Flora (Visual/Spectral):</strong> Dense vegetation. Strong signatures of ferns, cycads, conifers, and early flowering plants (angiosperms). No grasses detected.</li>
-                <li><strong>Fauna (Acoustic/Seismic/Thermal):</strong>
-                    <ul>
-                        <li>Multiple large (est. >500kg) thermal signatures detected within 1km radius.</li>
-                        <li>Low-frequency vocalizations and heavy ground tremors recorded, consistent with large terrestrial vertebrates.</li>
-                        <li><span class="text-yellow">Caution:</span> MSA-04 passive sensors registered rapid movement of a large predatory form (est. length 9-12m) approaching the MSA's last known position.</li>
-                    </ul>
-                </li>
-            </ul>
-            <p class="text-red"><strong>Conclusion:</strong> Environment is viable for human short-term survival with appropriate protection but presents extreme biological hazards.</p>
-        </div>
-
-        <div class="info-section" id="info-retrievalProtocol">
-            <h4>Operation HEIMDALL: Retrieval/Neutralization Protocol Outline (Theoretical)</h4>
-            <p><strong>OBJECTIVE:</strong> Recover Expeditionary Team Delta and associated technology, or neutralize assets to prevent paradox/technological contamination.</p>
-            <p><strong>PHASE 1: Reconnaissance & Contact (Current)</strong></p>
-            <ul>
-                <li>Utilize Project ECHO tachyon pulse system to attempt one-way communication (coded signals).</li>
-                <li>Deploy long-range temporal probes (if CRFG Unit 04 can be safely brought online) for passive observation of MTZ. Target: Last known coordinates of MSA-04.</li>
-            </ul>
-            <p><strong>PHASE 2: Manned Retrieval Attempt (High Risk - Contingent on CRFG Unit 04 Stability & Favorable Intel)</strong></p>
-            <ul>
-                <li>Requires precise recalibration of CRFG for targeted, stable aperture generation to MTZ. <span class="text-yellow">Current models predict instability.</span></li>
-                <li>Deployment of specialized Temporal Retrieval Team (TRT) with enhanced environmental protection and defensive capabilities.</li>
-                <li>Strict time limit for on-site operations in MTZ (est. < 1 hour) to minimize exposure and paradox risk.</li>
-            </ul>
-            <p><strong>PHASE 3: Asset Neutralization (If Retrieval Fails or Deemed Unacceptably Risky)</strong></p>
-            <ul>
-                <li>Remote targeting of MSA-04 self-destruct mechanism via focused temporal pulse (theoretical).</li>
-                <li><span class="text-red">Extreme Contingency:</span> Controlled destabilization of CRFG Unit 04 to "cleanse" temporal pathway. Collateral damage to Site Gamma-7 and surrounding area considered catastrophic but potentially acceptable to prevent large-scale paradox. Requires NCA direct approval.</li>
-            </ul>
-            <p><strong>PRIMARY DIRECTIVE:</strong> Prevent temporal contamination. Personnel recovery is secondary if it conflicts with the primary directive.</p>
-        </div>
-
-        <!-- START OF NEW HTML FOR VIDEO PLAYER SECTION -->
-        <div class="info-section" id="info-surveillanceFeed">
-            <h4>Surveillance Archive Footage (MSA-04 Last Transmission Fragment)</h4>
-            <p>Recovered visual data fragment from Mobile Sensor Array (MSA-04) before complete signal loss. Audio corrupted.</p>
-            <div class="video-player-container">
-                <video id="customVideoPlayer" src="warning.mp4" poster="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=">
-                    Your browser does not support the video tag.
-                    <!-- YOU MUST REPLACE placeholder_video.mp4 with your video file -->
-                    <!-- The poster is a black 1x1 pixel gif to hide initial video frame if not auto-playing -->
-                </video>
-                <div class="custom-controls">
-                    <button id="playPauseBtn">PLAY</button>
-                    <button id="rewindBtn">RW</button> <!-- Rewind 5s -->
-                    <button id="forwardBtn">FF</button> <!-- Forward 5s -->
-                    <div class="seek-bar-container" id="seekBarContainer">
-                        <div class="seek-bar-progress" id="seekBarProgress"></div>
-                    </div>
-                    <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
-                    <div class="volume-controls">
-                        <button id="muteBtn">MUTE</button>
-                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-                        <button id="volDownBtn">-</button>
-                        <button id="volUpBtn">+</button>
-                    </div>
-                    <button id="fullscreenBtn">FS</button>
+    
+    <input type="file" id="pfp-upload-input" class="hidden" accept="image/*">
+    <div id="username-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="title-bar">Change Username</div>
+            <div class="modal-body">
+                <label for="new-username-input">Enter new username:</label>
+                <input type="text" id="new-username-input" style="margin-top: 5px;">
+                <div style="text-align: center; margin-top: 15px;">
+                    <button id="confirm-username-change" class="auth-button">OK</button>
+                    <button id="cancel-username-change" class="auth-button">Cancel</button>
                 </div>
             </div>
-            <p class="text-yellow" style="text-align:center; font-size:0.8em; margin-top:5px;">NOTE: Data integrity questionable. Visual artifacts may be present.</p>
-        </div>
-        <!-- END OF NEW HTML FOR VIDEO PLAYER SECTION -->
-
-
-        <div class="classification-header bottom">TOP SECRET // SCI-TEMPORAL // EYES ONLY</div>
-    </div>
-
-    <div class="password-modal" id="actionPasswordModal">
-        <div class="password-modal-content">
-            <button class="close-modal-btn" onclick="closeActionPasswordModal()">X</button>
-            <h3>Annex Access</h3>
-            <p style="color: #333; margin-bottom:15px; font-size:0.9em;">Enter Operational Code.</p>
-            <input type="password" id="actionPasswordInput" placeholder="CODE">
-            <button onclick="checkActionPassword()">Access</button>
-            <p class="password-error" id="actionPasswordError"></p>
         </div>
     </div>
 
-    <div class="legal-terms-modal-overlay" id="legalTermsModal">
-        <div class="legal-terms-modal-content">
-            <h3>TERMS OF SYSTEM ACCESS & DATA HANDLING</h3>
-            <div class="legal-terms-text-area" id="legalTermsTextArea">
-                <p><strong>NOTICE TO ALL PERSONNEL ACCESSING THIS SYSTEM:</strong></p>
-                <p>By proceeding beyond this point and accessing any data contained within this system ("System"), you ("User") hereby acknowledge, understand, and expressly agree to the following terms and conditions. Failure to comply with these terms may result in severe administrative, civil, and/or criminal penalties, including but not limited to termination of access, employment termination, fines, and imprisonment under applicable federal and international law.</p>
-                <p><strong>1. CLASSIFICATION AND HANDLING:</strong> All information contained within or accessed through this System is classified at a minimum level of TOP SECRET//SCI-TEMPORAL or higher, unless explicitly marked otherwise. User agrees to handle all such information in strict accordance with U.S. Government regulations, agency-specific directives (including but not limited to Directive 00-ALPHA-SECURITY), and all relevant non-disclosure agreements (NDAs) signed by the User. No information may be copied, transmitted, discussed, or removed from authorized secure facilities or networks without explicit, written authorization from the designated cognizant security authority (CSA).</p>
-                <p><strong>2. AUTHORIZED USE ONLY:</strong> Access to this System is granted solely for official U.S. Government duties as authorized by User's direct chain of command and validated security clearance. Any access or attempted access for personal use, unauthorized research, or any purpose not directly related to assigned official duties is strictly prohibited and will be logged and investigated.</p>
-                <p><strong>3. MONITORING AND AUDIT:</strong> User acknowledges that all activities on this System, including keystrokes, data access, file transfers, and communication attempts, are subject to continuous monitoring, recording, and auditing by authorized U.S. Government personnel without further notice. This monitoring is conducted for purposes of system security, maintenance, law enforcement, counterintelligence, and to ensure compliance with all applicable regulations and policies. There is no expectation of privacy when using this System.</p>
-                <p><strong>4. DATA INTEGRITY AND SECURITY INCIDENTS:</strong> User is responsible for maintaining the integrity and security of all data accessed. Any suspected or actual security incident, data spillage, unauthorized disclosure, or suspicious activity must be reported IMMEDIATELY to the System Security Officer (SSO) or the designated incident response team through established reporting channels.</p>
-                <p><strong>5. NON-DISCLOSURE OBLIGATION:</strong> The obligation to protect classified information accessed through this System extends indefinitely, even after termination of User's access, employment, or affiliation with the U.S. Government. User agrees never to disclose, publish, or disseminate any classified information to any unauthorized person or entity.</p>
-                <p><strong>6. CONSENT TO JURISDICTION:</strong> User consents to the jurisdiction of U.S. federal courts for any action arising from or related to the use of this System or the handling of information obtained therefrom.</p>
-                <p><strong>7. ACKNOWLEDGEMENT OF UNDERSTANDING:</strong> By checking the "I acknowledge and agree" box and proceeding with authentication, User affirms that they have read, understood, and consent to be legally bound by these Terms of System Access & Data Handling. User further affirms that they possess the requisite security clearance and need-to-know for the information they are attempting to access.</p>
-                <p>FAILURE TO ADHERE TO THESE TERMS CONSTITUTES A SERIOUS SECURITY VIOLATION.</p>
-                <hr>
-                <p style="font-size:0.8em; text-align:center;">Document Version: TOS-SYS-1.7.3 REV B - Last Updated: 2023-11-01</p>
-            </div>
-            <button id="closeLegalTermsBtn">CLOSE</button>
+    <div id="warning-window">
+        <div class="title-bar">Warning</div>
+        <div class="modal-body">
+            <span class="warning-icon">!</span>
+            <span>Theres a lot of bugs that need to be fixed so just keep in mind that its not perfect</span>
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, push, onChildAdded, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
-    <script>
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB');
+        const firebaseConfig = {
+            apiKey: "AIzaSyDIFtz1SKI5zm-IQUJ1yNILX_CvT7yUAQg",
+            authDomain: "flyyingkittyyarrr.firebaseapp.com",
+            databaseURL: "https://flyyingkittyyarrr-default-rtdb.firebaseio.com",
+            projectId: "flyyingkittyyarrr",
+            storageBucket: "flyyingkittyyarrr.appspot.com",
+            messagingSenderId: "92004323057",
+            appId: "1:92004323057:web:af8a781dfd17e9d7e3a350",
+            measurementId: "G-NCL7SJC998"
+        };
 
-        const initialPasswordOverlay = document.getElementById('initialPasswordOverlay');
-        const initialPasswordInput = document.getElementById('initialPasswordInput');
-        const initialPasswordError = document.getElementById('initialPasswordError');
-        const mainContentArea = document.getElementById('mainContentArea');
-
-        const actionPasswordModal = document.getElementById('actionPasswordModal');
-        const actionPasswordInput = document.getElementById('actionPasswordInput');
-        const actionPasswordError = document.getElementById('actionPasswordError');
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
         
-        let currentInfoSectionId = null;
+        let messageListener = null;
+        const messagesRef = ref(db, 'messages');
 
-        function checkInitialPassword() {
-            if (!document.getElementById('agreementCheckbox').checked) {
-                initialPasswordError.textContent = 'YOU MUST AGREE TO THE TERMS OF USE.';
-                return;
-            }
+        const authView = document.getElementById('auth-view');
+        const chatView = document.getElementById('chat-view');
+        const authError = document.getElementById('auth-error');
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginPasswordInput = document.getElementById('login-password');
+        const signupForm = document.getElementById('signup-form');
+        const signupBtn = document.getElementById('signup-btn');
+        const signupUsernameInput = document.getElementById('signup-username');
+        const signupEmailInput = document.getElementById('signup-email');
+        const signupPasswordInput = document.getElementById('signup-password');
+        document.getElementById('login-form-toggle').addEventListener('click', () => { loginForm.classList.add('hidden'); signupForm.classList.remove('hidden'); });
+        document.getElementById('signup-form-toggle').addEventListener('click', () => { signupForm.classList.add('hidden'); loginForm.classList.remove('hidden'); });
+        const profileArea = document.getElementById('profile-area');
+        const profilePfp = document.getElementById('profile-pfp');
+        const profileUsername = document.getElementById('profile-username');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const messageDisplay = document.getElementById('message-display');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const changePfpBtn = document.getElementById('change-pfp-btn');
+        const pfpUploadInput = document.getElementById('pfp-upload-input');
+        const changeUsernameBtn = document.getElementById('change-username-btn');
+        const usernameModal = document.getElementById('username-modal');
+        const newUsernameInput = document.getElementById('new-username-input');
+        const confirmUsernameChange = document.getElementById('confirm-username-change');
+        const cancelUsernameChange = document.getElementById('cancel-username-change');
+        const DEFAULT_PFP_URL = "https://i.ibb.co/6yT4R2v/default-pfp.png";
 
-            if (initialPasswordInput.value === "sacred") {
-                initialPasswordOverlay.style.display = 'none';
-                mainContentArea.style.display = 'block';
-                initialPasswordError.textContent = '';
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                authView.classList.add('hidden');
+                chatView.classList.remove('hidden');
+                updateProfileUI(user);
+                messageDisplay.innerHTML = ''; 
+                startChatListener();
             } else {
-                initialPasswordError.textContent = 'AUTHENTICATION FAILED.';
-                initialPasswordInput.value = '';
-            }
-        }
-        initialPasswordInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                checkInitialPassword();
+                authView.classList.remove('hidden');
+                chatView.classList.add('hidden');
+                stopChatListener();
             }
         });
 
-        const actionButtons = document.querySelectorAll('.action-btn');
-        actionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                currentInfoSectionId = this.dataset.infoid;
-                document.querySelectorAll('.info-section').forEach(sec => sec.style.display = 'none');
-                
-                actionPasswordModal.style.display = 'flex';
-                actionPasswordInput.value = '';
-                actionPasswordError.textContent = '';
-                actionPasswordInput.focus();
+        signupBtn.addEventListener('click', async () => {
+            const username = signupUsernameInput.value.trim();
+            const email = signupEmailInput.value.trim();
+            const password = signupPasswordInput.value;
+            authError.textContent = '';
+            if (!username || !email || !password) return alert("All fields are required.");
+            const usernameRef = ref(db, `usernames/${username.toLowerCase()}`);
+            const usernameSnapshot = await get(usernameRef);
+            if (usernameSnapshot.exists()) return authError.textContent = "Username is already taken.";
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                await updateProfile(user, { displayName: username, photoURL: DEFAULT_PFP_URL });
+                await set(ref(db, `users/${user.uid}`), { username: username, email: user.email, photoURL: DEFAULT_PFP_URL });
+                await set(ref(db, `usernames/${username.toLowerCase()}`), { uid: user.uid });
+            } catch (error) { authError.textContent = error.message; }
+        });
+        
+        loginBtn.addEventListener('click', async () => {
+            const username = loginUsernameInput.value.trim();
+            const password = loginPasswordInput.value;
+            authError.textContent = '';
+            if (!username || !password) return;
+            try {
+                const usernameRef = ref(db, `usernames/${username.toLowerCase()}`);
+                const usernameSnapshot = await get(usernameRef);
+                if (!usernameSnapshot.exists()) throw new Error("User not found.");
+                const { uid } = usernameSnapshot.val();
+                const userRef = ref(db, `users/${uid}`);
+                const userSnapshot = await get(userRef);
+                if (!userSnapshot.exists()) throw new Error("User data is inconsistent.");
+                const { email } = userSnapshot.val();
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) { authError.textContent = error.message; }
+        });
+
+        signOutBtn.addEventListener('click', () => signOut(auth));
+        
+        profileArea.addEventListener('click', () => profileDropdown.classList.toggle('hidden'));
+        document.addEventListener('click', (e) => {
+            if (!profileArea.contains(e.target) && !profileDropdown.classList.contains('hidden')) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+
+        changePfpBtn.addEventListener('click', () => pfpUploadInput.click());
+        pfpUploadInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            const user = auth.currentUser;
+            if (!file || !user) return;
+            const filePath = `profile_pictures/${user.uid}/${Date.now()}_${file.name}`;
+            const fileRef = storageRef(storage, filePath);
+            try {
+                await uploadBytes(fileRef, file);
+                const photoURL = await getDownloadURL(fileRef);
+                await updateProfile(user, { photoURL });
+                await set(ref(db, `users/${user.uid}/photoURL`), photoURL);
+                updateProfileUI(user);
+            } catch(error) { alert("Error uploading file: " + error.message); }
+            profileDropdown.classList.add('hidden');
+        });
+
+        changeUsernameBtn.addEventListener('click', () => { usernameModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); });
+        cancelUsernameChange.addEventListener('click', () => usernameModal.classList.add('hidden'));
+        confirmUsernameChange.addEventListener('click', async () => {
+            const newUsername = newUsernameInput.value.trim();
+            const user = auth.currentUser;
+            if (!newUsername || !user) return;
+            if (newUsername === user.displayName) return usernameModal.classList.add('hidden');
+            const newUsernameRef = ref(db, `usernames/${newUsername.toLowerCase()}`);
+            const snapshot = await get(newUsernameRef);
+            if(snapshot.exists()) return alert("Username already taken.");
+            const oldUsername = user.displayName;
+            try {
+                await updateProfile(user, { displayName: newUsername });
+                await set(ref(db, `users/${user.uid}/username`), newUsername);
+                await set(ref(db, `usernames/${newUsername.toLowerCase()}`), { uid: user.uid });
+                await set(ref(db, `usernames/${oldUsername.toLowerCase()}`), null);
+                updateProfileUI(user);
+                alert("Username updated successfully!");
+            } catch(error) { alert("Error updating username: " + error.message); }
+            usernameModal.classList.add('hidden');
+        });
+
+        function startChatListener() {
+            stopChatListener();
+            messageListener = onChildAdded(messagesRef, (snapshot) => {
+                displayMessage(snapshot.val());
             });
-        });
-
-        function closeActionPasswordModal() {
-            actionPasswordModal.style.display = 'none';
-            currentInfoSectionId = null;
-        }
-
-        function checkActionPassword() {
-            if (actionPasswordInput.value === "secret") {
-                actionPasswordModal.style.display = 'none';
-                actionPasswordError.textContent = '';
-                if (currentInfoSectionId) {
-                    const sectionToOpen = document.getElementById('info-' + currentInfoSectionId);
-                    if (sectionToOpen) {
-                        sectionToOpen.style.display = 'block';
-                        sectionToOpen.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                }
-            } else {
-                actionPasswordError.textContent = 'INVALID CODE. ACCESS DENIED.';
-                actionPasswordInput.value = '';
-            }
-        }
-        actionPasswordInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                checkActionPassword();
-            }
-        });
-
-        const agreementCheckbox = document.getElementById('agreementCheckbox');
-        const initialSubmitButton = document.getElementById('initialSubmitButton');
-        const viewAgreementBtn = document.getElementById('viewAgreementBtn');
-        const legalTermsModal = document.getElementById('legalTermsModal');
-        const closeLegalTermsBtn = document.getElementById('closeLegalTermsBtn');
-
-        initialSubmitButton.disabled = true;
-        initialSubmitButton.style.backgroundColor = '#d0d0d0';
-        initialSubmitButton.style.cursor = 'not-allowed';
-
-
-        agreementCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                initialSubmitButton.disabled = false;
-                initialSubmitButton.style.backgroundColor = '#b0b0b0';
-                initialSubmitButton.style.cursor = 'pointer';
-                initialPasswordError.textContent = '';
-            } else {
-                initialSubmitButton.disabled = true;
-                initialSubmitButton.style.backgroundColor = '#d0d0d0';
-                initialSubmitButton.style.cursor = 'not-allowed';
-            }
-        });
-
-        viewAgreementBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            legalTermsModal.style.display = 'flex';
-        });
-
-        closeLegalTermsBtn.addEventListener('click', function() {
-            legalTermsModal.style.display = 'none';
-        });
-        
-        legalTermsModal.addEventListener('click', function(event) {
-            if (event.target === legalTermsModal) {
-                legalTermsModal.style.display = 'none';
-            }
-        });
-
-        // START OF NEW JAVASCRIPT FOR VIDEO PLAYER - DO NOT MODIFY JS ABOVE THIS LINE
-        const video = document.getElementById('customVideoPlayer');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const rewindBtn = document.getElementById('rewindBtn');
-        const forwardBtn = document.getElementById('forwardBtn');
-        const seekBarContainer = document.getElementById('seekBarContainer');
-        const seekBarProgress = document.getElementById('seekBarProgress');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const muteBtn = document.getElementById('muteBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volDownBtn = document.getElementById('volDownBtn');
-        const volUpBtn = document.getElementById('volUpBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const videoPlayerContainer = document.querySelector('.video-player-container'); // For fullscreen
-
-        let eyesBlinkTriggered = false; // Flag to ensure blink happens only once
-        let originalBodyBackground = '';
-
-        // Play/Pause
-        playPauseBtn.addEventListener('click', () => {
-            if (video.paused || video.ended) {
-                video.play();
-                playPauseBtn.textContent = 'PAUSE';
-            } else {
-                video.pause();
-                playPauseBtn.textContent = 'PLAY';
-            }
-        });
-
-        // Rewind 5s
-        rewindBtn.addEventListener('click', () => {
-            video.currentTime = Math.max(0, video.currentTime - 5);
-        });
-
-        // Forward 5s
-        forwardBtn.addEventListener('click', () => {
-            video.currentTime = Math.min(video.duration, video.currentTime + 5);
-        });
-
-        // Time update for seek bar and time display
-        video.addEventListener('timeupdate', () => {
-            const progress = (video.currentTime / video.duration) * 100;
-            seekBarProgress.style.width = progress + '%';
-            timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration || 0);
-
-            // Background blink effect at 0:40
-            if (video.currentTime >= 40 && video.currentTime < 41 && !eyesBlinkTriggered) {
-                eyesBlinkTriggered = true; // Set flag
-                triggerEyesBlink();
-            }
-        });
-        
-        // Reset blink trigger if video starts over or is seeked before 40s
-        video.addEventListener('seeking', () => {
-            if (video.currentTime < 40) {
-                eyesBlinkTriggered = false;
-                // Ensure background is normal if seeking away from the blink time
-                if (document.body.style.backgroundImage.includes('eyes.jpg')) {
-                    document.body.style.backgroundImage = originalBodyBackground;
-                }
-            }
-        });
-         video.addEventListener('seeked', () => { // Double check after seek
-            if (video.currentTime < 40 && eyesBlinkTriggered) {
-                 eyesBlinkTriggered = false;
-                 if (document.body.style.backgroundImage.includes('eyes.jpg')) {
-                    document.body.style.backgroundImage = originalBodyBackground;
-                }
-            }
-        });
-         video.addEventListener('ended', () => {
-            playPauseBtn.textContent = 'PLAY';
-            eyesBlinkTriggered = false; // Reset on video end
-         });
-
-
-        // Seek bar click
-        seekBarContainer.addEventListener('click', (e) => {
-            const rect = seekBarContainer.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = seekBarContainer.clientWidth;
-            const duration = video.duration;
-            video.currentTime = (clickX / width) * duration;
-        });
-
-        // Mute/Unmute
-        muteBtn.addEventListener('click', () => {
-            video.muted = !video.muted;
-            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
-            volumeSlider.value = video.muted ? 0 : video.volume;
-        });
-
-        // Volume Slider
-        volumeSlider.addEventListener('input', () => {
-            video.volume = volumeSlider.value;
-            video.muted = volumeSlider.value == 0;
-            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
-        });
-
-        // Volume Down
-        volDownBtn.addEventListener('click', () => {
-            video.volume = Math.max(0, video.volume - 0.1);
-            volumeSlider.value = video.volume;
-             video.muted = video.volume == 0;
-            muteBtn.textContent = video.muted ? 'UNMUTE' : 'MUTE';
-        });
-
-        // Volume Up
-        volUpBtn.addEventListener('click', () => {
-            video.volume = Math.min(1, video.volume + 0.1);
-            volumeSlider.value = video.volume;
-            video.muted = false; // Unmute if volume is turned up
-            muteBtn.textContent = 'MUTE';
-        });
-
-        // Fullscreen
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                if (videoPlayerContainer.requestFullscreen) {
-                    videoPlayerContainer.requestFullscreen();
-                } else if (videoPlayerContainer.mozRequestFullScreen) { /* Firefox */
-                    videoPlayerContainer.mozRequestFullScreen();
-                } else if (videoPlayerContainer.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-                    videoPlayerContainer.webkitRequestFullscreen();
-                } else if (videoPlayerContainer.msRequestFullscreen) { /* IE/Edge */
-                    videoPlayerContainer.msRequestFullscreen();
-                }
-                fullscreenBtn.textContent = 'EXIT FS';
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-                fullscreenBtn.textContent = 'FS';
-            }
-        });
-         document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                fullscreenBtn.textContent = 'FS';
-            }
-        });
-
-
-        // Helper function to format time
-        function formatTime(timeInSeconds) {
-            const minutes = Math.floor(timeInSeconds / 60);
-            const seconds = Math.floor(timeInSeconds % 60);
-            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-
-        // Function for background blink effect
-        function triggerEyesBlink() {
-            originalBodyBackground = document.body.style.background; // Store current background
-            
-            // Ensure eyes.jpg is available - replace with your actual image path
-            const eyesImageUrl = 'url(eyes.jpg)'; 
-
-            // Blink 1
-            setTimeout(() => {
-                document.body.style.backgroundImage = eyesImageUrl;
-                document.body.style.backgroundSize = 'cover'; // Or 'contain', 'auto'
-                document.body.style.backgroundRepeat = 'no-repeat';
-                document.body.style.backgroundPosition = 'center center';
-            }, 0);
-            setTimeout(() => {
-                document.body.style.backgroundImage = ''; // Clear image
-                document.body.style.background = originalBodyBackground; // Restore original
-            }, 100); // Blink duration
-
-            // Blink 2
-            setTimeout(() => {
-                document.body.style.backgroundImage = eyesImageUrl;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundRepeat = 'no-repeat';
-                document.body.style.backgroundPosition = 'center center';
-            }, 200);
-            setTimeout(() => {
-                document.body.style.backgroundImage = ''; // Clear image
-                document.body.style.background = originalBodyBackground; // Restore original
-            }, 300); // Blink duration
         }
         
-        // Ensure video is loaded before trying to get duration
-        video.addEventListener('loadedmetadata', () => {
-            timeDisplay.textContent = formatTime(0) + ' / ' + formatTime(video.duration);
-            volumeSlider.value = video.volume; // Initialize slider based on video's current volume
+        function stopChatListener() {
+            if (messageListener) {
+                off(messagesRef, 'child_added', messageListener);
+                messageListener = null;
+            }
+        }
+        
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const messageText = messageInput.value.trim();
+            const user = auth.currentUser;
+            if (messageText && user) {
+                push(messagesRef, {
+                    text: messageText,
+                    senderName: user.displayName,
+                    senderId: user.uid,
+                    senderPfp: user.photoURL || DEFAULT_PFP_URL,
+                    timestamp: serverTimestamp()
+                });
+                messageInput.value = '';
+            }
         });
 
+        function updateProfileUI(user) {
+            profilePfp.src = user.photoURL || DEFAULT_PFP_URL;
+            profileUsername.textContent = user.displayName;
+        }
 
-        // END OF NEW JAVASCRIPT FOR VIDEO PLAYER
+        function displayMessage(msg) {
+            const user = auth.currentUser;
+            if (!user) return;
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', msg.senderId === user.uid ? 'mine' : 'other');
+            msgDiv.innerHTML = `
+                <img src="${msg.senderPfp || DEFAULT_PFP_URL}" alt="PFP" class="message-pfp">
+                <div class="message-body">
+                    <span class="sender-name">${msg.senderName}:</span>
+                    <span>${msg.text}</span>
+                </div>
+            `;
+            messageDisplay.appendChild(msgDiv);
+            messageDisplay.scrollTop = messageDisplay.scrollHeight;
+        }
     </script>
-
 </body>
 </html>
