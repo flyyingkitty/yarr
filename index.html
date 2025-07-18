@@ -3,414 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat about random things lol</title>
+    <title>ExflierArt - Commisions page</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --xp-bg: #ECE9D8;
-            --xp-blue: #0055E7;
-            --xp-blue-gradient-end: #3B93FF;
-            --xp-text: #000000;
-            --xp-window-border: #ACA899;
-            --xp-desktop-bg: #3A6EA5;
+            --primary-glow: rgba(60, 130, 255, 0.6);
+            --background-start: #05080f;
+            --background-mid: #10141f;
+            --background-end: #0b0f1a;
+            --text-color: #e0e0e0;
+            --text-muted: #7a7a8c;
+            --glass-bg: rgba(10, 15, 25, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success-color: #28a745;
+            --danger-color: #dc3545;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 100%; }
 
         body {
-            font-family: Tahoma, Geneva, sans-serif;
-            font-size: 11px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            background: linear-gradient(-45deg, var(--background-start), var(--background-mid), var(--background-end));
+            background-size: 400% 400%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: var(--xp-desktop-bg);
-            color: var(--xp-text);
-            animation: fadeIn 0.3s ease-in;
-        }
-        .app-container {
-            width: 100%;
-            max-width: 640px;
-            height: 90vh;
-            max-height: 700px;
-            background-color: var(--xp-bg);
-            border: 1px solid var(--xp-window-border);
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
             overflow: hidden;
-            border: 2px outset #fff;
+            animation: gradientBG 20s ease infinite;
         }
-        .hidden { display: none !important; }
 
-        .title-bar {
-            background: linear-gradient(to bottom, var(--xp-blue), var(--xp-blue-gradient-end));
-            color: #fff;
-            padding: 4px 6px;
-            font-weight: bold;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        main { width: 100%; max-width: 600px; padding: 2rem; position: relative; }
+        #render-form { position: relative; transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        #render-form.fading-out { opacity: 0; transform: scale(0.95); }
+
+        .form-step { display: none; text-align: center; animation: fadeIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .form-step.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-step h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; margin-bottom: 1.5rem; letter-spacing: 0.5px; }
+        .form-step h3 { font-size: 1.2rem; font-weight: 400; color: var(--text-muted); margin-bottom: 1rem; margin-top: 1rem; }
+        .form-step h2 .icon { margin-right: 0.75rem; display: inline-block; transform: translateY(2px); }
+        .step-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: -1.5rem; margin-bottom: 2.5rem; }
+
+        .input-wrapper { position: relative; margin-bottom: 2rem; }
+        .text-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--glass-border); color: var(--text-color); font-size: 1.5rem; font-family: 'Poppins', sans-serif; padding: 0.5rem 0.2rem; text-align: center; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .text-input:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 5px 20px -5px var(--primary-glow); }
+        .text-input::placeholder { color: var(--text-muted); opacity: 0.8; font-weight: 400; }
+        textarea.text-input { min-height: 120px; font-size: 1.2rem; resize: none; margin-bottom: 1rem; }
+
+        .option-picker { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .option { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50px; padding: 0.8rem 1.8rem; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .option:hover { transform: translateY(-5px) scale(1.05); border-color: var(--primary-glow); box-shadow: 0 0 25px -5px var(--primary-glow); }
+        .option.active { background: var(--primary-glow); color: #fff; border-color: transparent; box-shadow: 0 0 25px -5px var(--primary-glow); transform: translateY(-5px) scale(1.05); }
+
+        .visualizer-container {
+            height: 180px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            user-select: none;
+            margin: 1.5rem 0;
         }
-        
-        #auth-view { padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%; background-color: var(--xp-bg); }
-        .auth-form { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .auth-form input {
-            padding: 5px;
-            font-family: Tahoma, sans-serif;
-            font-size: 11px;
-            border: 1px solid var(--xp-window-border);
-            box-shadow: inset 1px 1px 2px #777;
-            background-color: #fff;
+        #aspect-ratio-visualizer {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .auth-button {
-            font-family: Tahoma, sans-serif;
-            font-size: 11px;
-            padding: 5px 15px;
-            background-color: var(--xp-bg);
-            border: 2px outset #fff;
-            cursor: pointer;
-        }
-        .auth-button:active { border-style: inset; }
-        .form-actions { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        #auth-error { color: #A00; text-align: center; min-height: 20px; margin-top: 10px; }
-        .form-toggle { color: #0000EE; cursor: pointer; text-decoration: underline; text-align: center; margin-top: 15px; }
 
-        #chat-view { display: flex; flex-direction: column; height: 100%; width: 100%; }
-        #profile-area { display: flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid transparent; padding: 2px; }
-        #profile-area:hover { border: 1px dotted #fff; }
-        #profile-pfp { width: 24px; height: 24px; border: 1px inset #fff; }
+        .file-upload-label { display: inline-block; background: var(--glass-bg); border: 2px dashed var(--glass-border); border-radius: 12px; padding: 1.5rem 2rem; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 1rem; }
+        .file-upload-label:hover { border-color: var(--primary-glow); color: var(--primary-glow); }
+        #image-preview-container { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        .preview-item { position: relative; }
+        .preview-image { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--glass-border); }
+        .remove-image-btn { position: absolute; top: -5px; right: -5px; background: var(--danger-color); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+        .remove-image-btn:hover { transform: scale(1.1); }
         
-        #profile-dropdown {
-            position: absolute;
-            top: 32px;
-            right: 5px;
-            background-color: var(--xp-bg);
-            border: 2px outset #fff;
-            box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
-            z-index: 100;
-        }
-        .dropdown-item { padding: 5px 25px 5px 15px; cursor: pointer; }
-        .dropdown-item:hover { background-color: var(--xp-blue); color: #fff; }
+        .next-btn { background: transparent; border: 2px solid var(--glass-border); color: var(--text-color); border-radius: 50px; padding: 0.8rem 2.5rem; font-size: 1rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; }
+        .next-btn:hover { background: var(--primary-glow); border-color: var(--primary-glow); color: #fff; transform: scale(1.05); box-shadow: 0 0 20px var(--primary-glow); }
+        .submit-btn { background: var(--primary-glow); border: none; color: #fff; }
+        .submit-btn:disabled { background: #555; color: #999; opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; border-color: var(--glass-border); }
 
-        #message-display {
-            flex-grow: 1;
-            padding: 10px;
-            overflow-y: scroll;
-            background-color: #fff;
-            border-top: 1px solid var(--xp-window-border);
-            border-bottom: 1px solid var(--xp-window-border);
-            box-shadow: inset 1px 1px 2px #777;
-        }
-        .message { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; }
-        .message-pfp { width: 32px; height: 32px; border: 1px inset #ccc; flex-shrink: 0; }
-        .message-body { display: flex; flex-direction: column; }
-        .sender-name { font-weight: bold; }
-        .message.mine .sender-name { color: #0000C8; }
-        .message.other .sender-name { color: #C80000; }
-        
-        #message-form { display: flex; padding: 10px; gap: 10px; align-items: center; }
-        #message-input { flex-grow: 1; font-family: Tahoma, sans-serif; padding: 5px; border: 1px solid var(--xp-window-border); box-shadow: inset 1px 1px 2px #777; }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; z-index: 200; }
-        .modal-content { background: var(--xp-bg); padding: 2px; border: 2px outset #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.4); }
-        .modal-content .title-bar { cursor: move; }
-        .modal-body { padding: 20px; }
-
-        #warning-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 250px;
-            background-color: var(--xp-bg);
-            border: 2px outset #fff;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-            z-index: 500;
-        }
-        #warning-window .title-bar { background: linear-gradient(to bottom, #F99B1D, #FEBD54); }
-        #warning-window .modal-body { display: flex; align-items: flex-start; gap: 10px; }
-        #warning-window .warning-icon { font-size: 24px; color: #F99B1D; }
+        #confirmation-screen { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: fadeIn 1s ease-in-out forwards; }
+        #confirmation-screen .checkmark { width: 100px; height: 100px; border-radius: 50%; display: block; stroke-width: 3; stroke: var(--success-color); stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px var(--success-color); animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; margin-bottom: 1.5rem; }
+        #confirmation-screen .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 3; stroke-miterlimit: 10; stroke: var(--success-color); fill: var(--glass-bg); animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+        #confirmation-screen .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards; }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+        @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 50px var(--success-color); } }
+        #confirmation-screen h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        #confirmation-screen p { color: var(--text-muted); max-width: 350px; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div id="auth-view">
-            <div id="login-form">
-                <div class="title-bar">User Login</div>
-                <form class="auth-form" style="padding: 20px;">
-                    <label for="login-username">Username:</label>
-                    <input type="text" id="login-username" required>
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" required>
-                    <div class="form-actions"><button type="button" id="login-btn" class="auth-button">Log In</button></div>
-                </form>
-                <p id="login-form-toggle" class="form-toggle">Create a new account</p>
-            </div>
-            <div id="signup-form" class="hidden">
-                <div class="title-bar">Create New Account</div>
-                <form class="auth-form" style="padding: 20px;">
-                    <label for="signup-username">Username:</label>
-                    <input type="text" id="signup-username" required>
-                    <label for="signup-email">Email:</label>
-                    <input type="email" id="signup-email" required>
-                    <label for="signup-password">Password:</label>
-                    <input type="password" id="signup-password" required>
-                    <div class="form-actions"><button type="button" id="signup-btn" class="auth-button">Sign Up</button></div>
-                </form>
-                <p id="signup-form-toggle" class="form-toggle">Return to Login</p>
-            </div>
-            <p id="auth-error"></p>
-        </div>
 
-        <div id="chat-view" class="hidden">
-            <header class="title-bar">
-                <span>Chat about random things lol</span>
-                <div id="profile-area">
-                    <span id="profile-username"></span>
-                    <img id="profile-pfp" src="" alt="PFP">
+    <main id="app-container">
+        <form id="render-form" novalidate>
+            <input type="hidden" id="aspect-ratio-value" name="aspect-ratio" value="16:9">
+            <input type="hidden" id="orientation-value" name="orientation" value="Landscape">
+            <input type="hidden" id="resolution-value" name="resolution" value="1920x1080">
+            <input type="file" id="reference-image" name="files" accept="image/*" multiple style="display: none;">
+
+            <div class="form-step active" data-step="0">
+                <h2><span class="icon">👋</span>First, what's your Discord Username?</h2>
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" class="text-input" placeholder="e.g., username#1234" required>
                 </div>
-            </header>
-            <div id="profile-dropdown" class="hidden">
-                <div class="dropdown-item" id="change-username-btn">Change Username...</div>
-                <div class="dropdown-item" id="change-pfp-btn">Change Picture...</div>
-                <hr style="border: 0; border-top: 1px solid #999; margin: 0;">
-                <div class="dropdown-item" id="sign-out-btn">Sign Out</div>
+                <button type="button" class="next-btn">Next</button>
             </div>
-            <main id="message-display"></main>
-            <form id="message-form">
-                <input type="text" id="message-input" autocomplete="off">
-                <button type="submit" class="auth-button">Send</button>
-            </form>
-        </div>
-    </div>
-    
-    <input type="file" id="pfp-upload-input" class="hidden" accept="image/*">
-    <div id="username-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="title-bar">Change Username</div>
-            <div class="modal-body">
-                <label for="new-username-input">Enter new username:</label>
-                <input type="text" id="new-username-input" style="margin-top: 5px;">
-                <div style="text-align: center; margin-top: 15px;">
-                    <button id="confirm-username-change" class="auth-button">OK</button>
-                    <button id="cancel-username-change" class="auth-button">Cancel</button>
+
+            <div class="form-step" data-step="1">
+                <h2><span class="icon">📐</span>Choose an Aspect Ratio.</h2>
+                <div class="option-picker" data-controls="aspect-ratio-value">
+                    <div class="option active" data-value="16:9">16:9</div>
+                    <div class="option" data-value="4:3">4:3</div>
+                    <div class="option" data-value="1:1">1:1</div>
+                    <div class="option" data-value="21:9">21:9</div>
                 </div>
+                <div id="orientation-section">
+                    <h3>Orientation</h3>
+                    <div class="option-picker" data-controls="orientation-value">
+                        <div class="option active" data-value="Landscape">Landscape</div>
+                        <div class="option" data-value="Portrait">Portrait</div>
+                    </div>
+                </div>
+                <div class="visualizer-container">
+                    <div id="aspect-ratio-visualizer"></div>
+                </div>
+                <button type="button" class="next-btn">Continue</button>
             </div>
+
+            <div class="form-step" data-step="2">
+                <h2><span class="icon">🖼️</span>And the Resolution?</h2>
+                <p class="step-subtitle">Price is not affected by this selection.</p>
+                <div class="option-picker" data-controls="resolution-value">
+                    <div class="option active" data-value="1920x1080">1920x1080</div>
+                    <div class="option" data-value="3840x2160">3840x2160 (4K)</div>
+                </div>
+                <button type="button" class="next-btn">Continue</button>
+            </div>
+
+            <div class="form-step" data-step="3">
+                <h2><span class="icon">📝</span>Describe your vision.</h2>
+                <div class="input-wrapper">
+                    <textarea id="description" name="description" class="text-input" placeholder="Mood, colors, scene..."></textarea>
+                </div>
+                <h2><span class="icon">📎</span>Add reference images. (Optional)</h2>
+                <div id="image-preview-container"></div>
+                <label for="reference-image" class="file-upload-label">Click to Upload</label>
+                <button type="submit" class="next-btn submit-btn" id="submit-button">Send Request</button>
+            </div>
+        </form>
+
+        <div id="confirmation-screen">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h2>Request Sent!</h2>
+            <p>Your vision is on its way to the artist. You'll get a DM on Discord soon!</p>
         </div>
-    </div>
+    </main>
 
-    <div id="warning-window">
-        <div class="title-bar">Warning</div>
-        <div class="modal-body">
-            <span class="warning-icon">!</span>
-            <span>Theres a lot of bugs that need to be fixed so just keep in mind that its not perfect</span>
-        </div>
-    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('render-form');
+        const steps = Array.from(document.querySelectorAll('.form-step'));
+        const nextButtons = document.querySelectorAll('.next-btn');
+        const optionPickers = document.querySelectorAll('.option-picker');
+        const fileInput = document.getElementById('reference-image');
+        const aspectRatioVisualizer = document.getElementById('aspect-ratio-visualizer');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const orientationSection = document.getElementById('orientation-section');
+        
+        const webhookUrl = "https://discord.com/api/webhooks/1395819518055551048/LQ7D-nj738XYJftNmtyvP5A6kyrnWFWZrgn0PIdALo3lLSmdZOnMCgQlYmc69yW_qxXj";
+        let currentStep = 0;
+        let uploadedFiles = [];
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-        import { getDatabase, ref, set, get, push, onChildAdded, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDIFtz1SKI5zm-IQUJ1yNILX_CvT7yUAQg",
-            authDomain: "flyyingkittyyarrr.firebaseapp.com",
-            databaseURL: "https://flyyingkittyyarrr-default-rtdb.firebaseio.com",
-            projectId: "flyyingkittyyarrr",
-            storageBucket: "flyyingkittyyarrr.appspot.com",
-            messagingSenderId: "92004323057",
-            appId: "1:92004323057:web:af8a781dfd17e9d7e3a350",
-            measurementId: "G-NCL7SJC998"
+        const showStep = (stepIndex) => {
+            steps.forEach((step, index) => step.classList.toggle('active', index === stepIndex));
+            if (stepIndex === 1) {
+                updateVisualizer();
+            }
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-        const storage = getStorage(app);
+        const goToNextStep = () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        };
         
-        let messageListener = null;
-        const messagesRef = ref(db, 'messages');
-
-        const authView = document.getElementById('auth-view');
-        const chatView = document.getElementById('chat-view');
-        const authError = document.getElementById('auth-error');
-        const loginForm = document.getElementById('login-form');
-        const loginBtn = document.getElementById('login-btn');
-        const loginUsernameInput = document.getElementById('login-username');
-        const loginPasswordInput = document.getElementById('login-password');
-        const signupForm = document.getElementById('signup-form');
-        const signupBtn = document.getElementById('signup-btn');
-        const signupUsernameInput = document.getElementById('signup-username');
-        const signupEmailInput = document.getElementById('signup-email');
-        const signupPasswordInput = document.getElementById('signup-password');
-        document.getElementById('login-form-toggle').addEventListener('click', () => { loginForm.classList.add('hidden'); signupForm.classList.remove('hidden'); });
-        document.getElementById('signup-form-toggle').addEventListener('click', () => { signupForm.classList.add('hidden'); loginForm.classList.remove('hidden'); });
-        const profileArea = document.getElementById('profile-area');
-        const profilePfp = document.getElementById('profile-pfp');
-        const profileUsername = document.getElementById('profile-username');
-        const profileDropdown = document.getElementById('profile-dropdown');
-        const messageDisplay = document.getElementById('message-display');
-        const messageForm = document.getElementById('message-form');
-        const messageInput = document.getElementById('message-input');
-        const signOutBtn = document.getElementById('sign-out-btn');
-        const changePfpBtn = document.getElementById('change-pfp-btn');
-        const pfpUploadInput = document.getElementById('pfp-upload-input');
-        const changeUsernameBtn = document.getElementById('change-username-btn');
-        const usernameModal = document.getElementById('username-modal');
-        const newUsernameInput = document.getElementById('new-username-input');
-        const confirmUsernameChange = document.getElementById('confirm-username-change');
-        const cancelUsernameChange = document.getElementById('cancel-username-change');
-        const DEFAULT_PFP_URL = "https://i.ibb.co/6yT4R2v/default-pfp.png";
-
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                authView.classList.add('hidden');
-                chatView.classList.remove('hidden');
-                updateProfileUI(user);
-                messageDisplay.innerHTML = ''; 
-                startChatListener();
+        const updateVisualizer = () => {
+            const ratioValue = document.getElementById('aspect-ratio-value').value;
+            const orientationValue = document.getElementById('orientation-value').value;
+            const isSquare = ratioValue === '1:1';
+            orientationSection.style.display = isSquare ? 'none' : 'block';
+            const [w, h] = ratioValue.split(':').map(Number);
+            let finalW = w, finalH = h;
+            if (!isSquare && orientationValue === 'Portrait') {
+                finalW = h;
+                finalH = w;
+            }
+            const container = aspectRatioVisualizer.parentElement;
+            const containerW = container.clientWidth;
+            const containerH = container.clientHeight;
+            let vizW, vizH;
+            if ((containerW / finalW) * finalH > containerH) {
+                vizH = containerH;
+                vizW = (containerH / finalH) * finalW;
             } else {
-                authView.classList.remove('hidden');
-                chatView.classList.add('hidden');
-                stopChatListener();
+                vizW = containerW;
+                vizH = (containerW / finalW) * finalH;
             }
-        });
-
-        signupBtn.addEventListener('click', async () => {
-            const username = signupUsernameInput.value.trim();
-            const email = signupEmailInput.value.trim();
-            const password = signupPasswordInput.value;
-            authError.textContent = '';
-            if (!username || !email || !password) return alert("All fields are required.");
-            const usernameRef = ref(db, `usernames/${username.toLowerCase()}`);
-            const usernameSnapshot = await get(usernameRef);
-            if (usernameSnapshot.exists()) return authError.textContent = "Username is already taken.";
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                await updateProfile(user, { displayName: username, photoURL: DEFAULT_PFP_URL });
-                await set(ref(db, `users/${user.uid}`), { username: username, email: user.email, photoURL: DEFAULT_PFP_URL });
-                await set(ref(db, `usernames/${username.toLowerCase()}`), { uid: user.uid });
-            } catch (error) { authError.textContent = error.message; }
-        });
+            aspectRatioVisualizer.style.width = `${vizW}px`;
+            aspectRatioVisualizer.style.height = `${vizH}px`;
+        };
         
-        loginBtn.addEventListener('click', async () => {
-            const username = loginUsernameInput.value.trim();
-            const password = loginPasswordInput.value;
-            authError.textContent = '';
-            if (!username || !password) return;
-            try {
-                const usernameRef = ref(db, `usernames/${username.toLowerCase()}`);
-                const usernameSnapshot = await get(usernameRef);
-                if (!usernameSnapshot.exists()) throw new Error("User not found.");
-                const { uid } = usernameSnapshot.val();
-                const userRef = ref(db, `users/${uid}`);
-                const userSnapshot = await get(userRef);
-                if (!userSnapshot.exists()) throw new Error("User data is inconsistent.");
-                const { email } = userSnapshot.val();
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) { authError.textContent = error.message; }
-        });
-
-        signOutBtn.addEventListener('click', () => signOut(auth));
+        new ResizeObserver(updateVisualizer).observe(document.querySelector('.visualizer-container'));
         
-        profileArea.addEventListener('click', () => profileDropdown.classList.toggle('hidden'));
-        document.addEventListener('click', (e) => {
-            if (!profileArea.contains(e.target) && !profileDropdown.classList.contains('hidden')) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
-
-        changePfpBtn.addEventListener('click', () => pfpUploadInput.click());
-        pfpUploadInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            const user = auth.currentUser;
-            if (!file || !user) return;
-            const filePath = `profile_pictures/${user.uid}/${Date.now()}_${file.name}`;
-            const fileRef = storageRef(storage, filePath);
-            try {
-                await uploadBytes(fileRef, file);
-                const photoURL = await getDownloadURL(fileRef);
-                await updateProfile(user, { photoURL });
-                await set(ref(db, `users/${user.uid}/photoURL`), photoURL);
-                updateProfileUI(user);
-            } catch(error) { alert("Error uploading file: " + error.message); }
-            profileDropdown.classList.add('hidden');
-        });
-
-        changeUsernameBtn.addEventListener('click', () => { usernameModal.classList.remove('hidden'); profileDropdown.classList.add('hidden'); });
-        cancelUsernameChange.addEventListener('click', () => usernameModal.classList.add('hidden'));
-        confirmUsernameChange.addEventListener('click', async () => {
-            const newUsername = newUsernameInput.value.trim();
-            const user = auth.currentUser;
-            if (!newUsername || !user) return;
-            if (newUsername === user.displayName) return usernameModal.classList.add('hidden');
-            const newUsernameRef = ref(db, `usernames/${newUsername.toLowerCase()}`);
-            const snapshot = await get(newUsernameRef);
-            if(snapshot.exists()) return alert("Username already taken.");
-            const oldUsername = user.displayName;
-            try {
-                await updateProfile(user, { displayName: newUsername });
-                await set(ref(db, `users/${user.uid}/username`), newUsername);
-                await set(ref(db, `usernames/${newUsername.toLowerCase()}`), { uid: user.uid });
-                await set(ref(db, `usernames/${oldUsername.toLowerCase()}`), null);
-                updateProfileUI(user);
-                alert("Username updated successfully!");
-            } catch(error) { alert("Error updating username: " + error.message); }
-            usernameModal.classList.add('hidden');
-        });
-
-        function startChatListener() {
-            stopChatListener();
-            messageListener = onChildAdded(messagesRef, (snapshot) => {
-                displayMessage(snapshot.val());
+        nextButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentStepElement = steps[currentStep];
+                const input = currentStepElement.querySelector('input[required]');
+                if (input && !input.value.trim()) {
+                    input.style.borderColor = '#ff4d4d';
+                    input.style.boxShadow = '0 5px 20px -5px #ff4d4d';
+                    input.animate([{ transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 300, easing: 'ease-in-out' });
+                    return;
+                }
+                if (input) {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                }
+                if (button.type !== 'submit') goToNextStep();
             });
-        }
+        });
         
-        function stopChatListener() {
-            if (messageListener) {
-                off(messagesRef, 'child_added', messageListener);
-                messageListener = null;
-            }
-        }
-        
-        messageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const messageText = messageInput.value.trim();
-            const user = auth.currentUser;
-            if (messageText && user) {
-                push(messagesRef, {
-                    text: messageText,
-                    senderName: user.displayName,
-                    senderId: user.uid,
-                    senderPfp: user.photoURL || DEFAULT_PFP_URL,
-                    timestamp: serverTimestamp()
+        optionPickers.forEach(picker => {
+            const options = picker.querySelectorAll('.option');
+            const hiddenInput = document.getElementById(picker.dataset.controls);
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    picker.querySelector('.option.active')?.classList.remove('active');
+                    option.classList.add('active');
+                    hiddenInput.value = option.dataset.value;
+                    if (picker.dataset.controls === 'aspect-ratio-value' || picker.dataset.controls === 'orientation-value') {
+                        updateVisualizer();
+                    }
                 });
-                messageInput.value = '';
-            }
+            });
         });
 
-        function updateProfileUI(user) {
-            profilePfp.src = user.photoURL || DEFAULT_PFP_URL;
-            profileUsername.textContent = user.displayName;
-        }
+        const renderPreviews = () => {
+            imagePreviewContainer.innerHTML = '';
+            uploadedFiles.forEach((file, index) => {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'preview-image';
+                img.onload = () => URL.revokeObjectURL(img.src);
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-image-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.type = 'button';
+                removeBtn.onclick = () => {
+                    uploadedFiles.splice(index, 1);
+                    renderPreviews();
+                };
+                previewItem.appendChild(img);
+                previewItem.appendChild(removeBtn);
+                imagePreviewContainer.appendChild(previewItem);
+            });
+        };
 
-        function displayMessage(msg) {
-            const user = auth.currentUser;
-            if (!user) return;
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', msg.senderId === user.uid ? 'mine' : 'other');
-            msgDiv.innerHTML = `
-                <img src="${msg.senderPfp || DEFAULT_PFP_URL}" alt="PFP" class="message-pfp">
-                <div class="message-body">
-                    <span class="sender-name">${msg.senderName}:</span>
-                    <span>${msg.text}</span>
-                </div>
-            `;
-            messageDisplay.appendChild(msgDiv);
-            messageDisplay.scrollTop = messageDisplay.scrollHeight;
-        }
+        fileInput.addEventListener('change', () => {
+            uploadedFiles.push(...fileInput.files);
+            renderPreviews();
+            fileInput.value = '';
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+
+            const formData = new FormData();
+            
+            formData.append('username', document.getElementById('username').value);
+            formData.append('aspect-ratio', document.getElementById('aspect-ratio-value').value);
+            formData.append('orientation', document.getElementById('orientation-value').value);
+            formData.append('resolution', document.getElementById('resolution-value').value);
+            formData.append('description', document.getElementById('description').value);
+
+            uploadedFiles.forEach((file, index) => {
+                formData.append(`file${index}`, file, file.name);
+            });
+
+            const payload = {
+                username: "Render Commission Bot",
+                avatar_url: "https://i.imgur.com/8Y4bF9B.png",
+                embeds: [{
+                    title: "🚀 New Commission Request!",
+                    color: 4032255,
+                    timestamp: new Date().toISOString(),
+                    fields: [
+                        { name: "👤 Discord User", value: `\`${formData.get('username')}\``, inline: true },
+                        { name: "📐 Aspect Ratio", value: `\`${formData.get('aspect-ratio')}\``, inline: true },
+                        { name: "🧭 Orientation", value: `\`${formData.get('aspect-ratio') === '1:1' ? 'N/A' : formData.get('orientation')}\``, inline: true },
+                        { name: "🖼️ Resolution", value: `\`${formData.get('resolution')}\``, inline: false },
+                        { name: "📝 Description", value: formData.get('description') || "No description provided." },
+                    ],
+                    footer: { text: "Submission via Web Form" }
+                }]
+            };
+            
+            if (uploadedFiles.length > 0) {
+                const fileText = uploadedFiles.length > 1 ? `${uploadedFiles.length} files attached.` : `1 file attached.`;
+                payload.embeds[0].fields.push({ name: "📎 Reference Files", value: `See attached files below (${fileText})`});
+            }
+
+            formData.append('payload_json', JSON.stringify(payload));
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    form.classList.add('fading-out');
+                    setTimeout(() => {
+                        form.style.display = 'none';
+                        document.getElementById('confirmation-screen').style.display = 'flex';
+                    }, 500);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message || 'An unknown error occurred.'}`);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Request';
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Request';
+            }
+        });
+        
+        showStep(currentStep);
+    });
     </script>
 </body>
 </html>
