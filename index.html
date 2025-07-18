@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
     <style>
         :root {
             --primary-glow: rgba(80, 140, 255, 0.7);
@@ -17,7 +22,7 @@
             --text-color: #e0e0e0;
             --text-muted: #7a7a8c;
             --glass-bg: rgba(15, 20, 30, 0.5);
-            --glass-border: rgba(255, 255, 255, 0.08); /* More subtle border */
+            --glass-border: rgba(255, 255, 255, 0.08);
             --success-color: #28a745;
             --danger-color: #dc3545;
         }
@@ -36,10 +41,9 @@
             min-height: 100vh;
             overflow: hidden;
             animation: gradientBG 20s ease infinite;
-            position: relative; /* For the grain overlay */
+            position: relative;
         }
 
-        /* --- Grainy Overlay --- */
         body::after {
             content: "";
             position: fixed;
@@ -53,91 +57,57 @@
             z-index: 10;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         main { width: 100%; max-width: 600px; padding: 2rem; position: relative; }
-        #render-form { position: relative; transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
-        #render-form.fading-out { opacity: 0; transform: scale(0.95); }
+
+        #loader-container, #login-container, #form-container, #banned-container {
+            text-align: center;
+            display: none;
+        }
+        #loader-container.active, #login-container.active, #form-container.active, #banned-container.active {
+            display: block;
+        }
+
+        #render-form { position: relative; }
 
         .form-step { display: none; text-align: center; animation: fadeIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .form-step.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .form-step h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; margin-bottom: 1.5rem; letter-spacing: 0.5px; }
+        .form-step h2, #login-container h2, #banned-container h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; margin-bottom: 1.5rem; letter-spacing: 0.5px; }
         .form-step h3 { font-size: 1.2rem; font-weight: 400; color: var(--text-muted); margin-bottom: 1rem; margin-top: 1rem; }
-        .form-step h2 .icon { margin-right: 0.75rem; display: inline-block; transform: translateY(2px); }
-        .step-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: -1.5rem; margin-bottom: 2.5rem; }
+        .form-step h2 .icon, #login-container h2 .icon { margin-right: 0.75rem; display: inline-block; transform: translateY(2px); }
+        .step-subtitle, #login-container p { color: var(--text-muted); font-size: 0.9rem; margin-top: -1.5rem; margin-bottom: 2.5rem; }
+        #banned-container p { color: var(--danger-color); font-size: 1.1rem; }
+
+        /* --- MODIFIED User Identifier Styling --- */
+        #user-identifier {
+            position: fixed; /* Position relative to the viewport */
+            bottom: 1.5rem;  /* Distance from bottom */
+            right: 2rem;   /* Distance from right */
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            z-index: 5; /* Ensure it's above the grain */
+        }
 
         .input-wrapper { position: relative; margin-bottom: 2rem; }
         .text-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--glass-border); color: var(--text-color); font-size: 1.5rem; font-family: 'Poppins', sans-serif; padding: 0.5rem 0.2rem; text-align: center; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .text-input:focus { 
-            outline: none; 
-            border-color: var(--primary-glow); 
-            box-shadow: 0 6px 25px -5px rgba(80, 140, 255, 0.4);
-        }
+        .text-input:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 6px 25px -5px rgba(80, 140, 255, 0.4); }
         .text-input::placeholder { color: var(--text-muted); opacity: 0.8; font-weight: 400; }
         textarea.text-input { min-height: 120px; font-size: 1.2rem; resize: none; margin-bottom: 1rem; }
 
-        /* --- Enhanced Glow/Glare Buttons --- */
         .option-picker { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .option { 
-            background: var(--glass-bg); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 50px; 
-            padding: 0.8rem 1.8rem; 
-            cursor: pointer; 
-            font-weight: 500; 
-            transition: all 0.3s ease; 
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
-            position: relative;
-            overflow: hidden;
-        }
-        .option::after { /* Glare effect */
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 75%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-        .option:hover { 
-            transform: translateY(-5px) scale(1.05); 
-            border-color: rgba(80, 140, 255, 0.5);
-            box-shadow: 0 0 20px -5px rgba(80, 140, 255, 0.3);
-        }
+        .option { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50px; padding: 0.8rem 1.8rem; cursor: pointer; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); position: relative; overflow: hidden; }
+        .option::after { content: ''; position: absolute; top: 0; left: -100%; width: 75%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.6s ease; }
+        .option:hover { transform: translateY(-5px) scale(1.05); border-color: rgba(80, 140, 255, 0.5); box-shadow: 0 0 20px -5px rgba(80, 140, 255, 0.3); }
         .option:hover::after { left: 125%; }
-        .option.active { 
-            background: var(--primary-glow); 
-            color: #fff; 
-            border-color: transparent; 
-            box-shadow: 0 0 25px -5px rgba(80, 140, 255, 0.5), 0 0 40px -10px rgba(80, 140, 255, 0.3);
-            transform: translateY(-5px) scale(1.05);
-        }
+        .option.active { background: var(--primary-glow); color: #fff; border-color: transparent; box-shadow: 0 0 25px -5px rgba(80, 140, 255, 0.5), 0 0 40px -10px rgba(80, 140, 255, 0.3); transform: translateY(-5px) scale(1.05); }
 
-        .visualizer-container {
-            height: 180px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 1.5rem 0;
-        }
-        #aspect-ratio-visualizer {
-            background: rgba(0,0,0,0.15);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        .visualizer-container { height: 180px; display: flex; justify-content: center; align-items: center; margin: 1.5rem 0; }
+        #aspect-ratio-visualizer { background: rgba(0,0,0,0.15); border: 1px solid var(--glass-border); border-radius: 12px; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
 
         .file-upload-label { display: inline-block; background: var(--glass-bg); border: 2px dashed var(--glass-border); border-radius: 12px; padding: 1.5rem 2rem; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 1rem; }
         .file-upload-label:hover { border-color: var(--primary-glow); color: var(--primary-glow); }
@@ -148,15 +118,9 @@
         .remove-image-btn:hover { transform: scale(1.1); }
         
         .next-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-color); border-radius: 50px; padding: 0.8rem 2.5rem; font-size: 1rem; font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .next-btn:hover { 
-            background: var(--primary-glow); 
-            border-color: transparent; 
-            color: #fff; 
-            transform: scale(1.05); 
-            box-shadow: 0 0 25px -5px var(--primary-glow); 
-        }
-        .submit-btn { background: var(--primary-glow); border: none; color: #fff; }
-        .submit-btn:disabled { background: #555; color: #999; opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; border-color: var(--glass-border); }
+        .next-btn:hover { background: var(--primary-glow); border-color: transparent; color: #fff; transform: scale(1.05); box-shadow: 0 0 25px -5px var(--primary-glow); }
+        .submit-btn, #anonymous-login-btn { background: var(--primary-glow); border: none; color: #fff; }
+        .next-btn:disabled { background: #555; color: #999; opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; border-color: var(--glass-border); }
 
         #confirmation-screen { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: fadeIn 1s ease-in-out forwards; }
         #confirmation-screen .checkmark { width: 100px; height: 100px; border-radius: 50%; display: block; stroke-width: 3; stroke: var(--success-color); stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px var(--success-color); animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; margin-bottom: 1.5rem; }
@@ -170,77 +134,91 @@
     </style>
 </head>
 <body>
-
+    <div id="user-identifier"></div>
     <main id="app-container">
-        <form id="render-form" novalidate>
-            <input type="hidden" id="aspect-ratio-value" name="aspect-ratio" value="16:9">
-            <input type="hidden" id="orientation-value" name="orientation" value="Landscape">
-            <input type="hidden" id="resolution-value" name="resolution" value="1920x1080">
-            <input type="file" id="reference-image" name="files" accept="image/*" multiple style="display: none;">
+        <div id="loader-container" class="active">
+             <h2>Connecting...</h2>
+        </div>
+        <div id="banned-container">
+            <h2>Access Denied</h2>
+            <p>You have been banned from this service.</p>
+        </div>
+        <div id="login-container">
+            <h2><span class="icon"></span>ExflierArt's Commission form</h2>
+            <p style="margin-bottom: 1.5rem;">Log in to continue to the commission form.</p>
+            <button type="button" class="next-btn" id="anonymous-login-btn">Login Anonymously</button>
+        </div>
+        <div id="form-container">
+            <form id="render-form" novalidate>
+                <input type="hidden" id="aspect-ratio-value" name="aspect-ratio" value="16:9">
+                <input type="hidden" id="orientation-value" name="orientation" value="Landscape">
+                <input type="hidden" id="resolution-value" name="resolution" value="1920x1080">
+                <input type="file" id="reference-image" name="files" accept="image/*" multiple style="display: none;">
 
-            <div class="form-step active" data-step="0">
-                <h2><span class="icon">👋</span>First, what's your Discord Username?</h2>
-                <div class="input-wrapper">
-                    <input type="text" id="username" name="username" class="text-input" placeholder="e.g., username#1234" required>
-                </div>
-                <button type="button" class="next-btn">Next</button>
-            </div>
-
-            <div class="form-step" data-step="1">
-                <h2><span class="icon">📐</span>Choose an Aspect Ratio.</h2>
-                <div class="option-picker" data-controls="aspect-ratio-value">
-                    <div class="option active" data-value="16:9">16:9</div>
-                    <div class="option" data-value="4:3">4:3</div>
-                    <div class="option" data-value="1:1">1:1</div>
-                    <div class="option" data-value="21:9">21:9</div>
-                </div>
-                <div id="orientation-section">
-                    <h3>Orientation</h3>
-                    <div class="option-picker" data-controls="orientation-value">
-                        <div class="option active" data-value="Landscape">Landscape</div>
-                        <div class="option" data-value="Portrait">Portrait</div>
+                <div class="form-step active" data-step="0">
+                    <h2><span class="icon">👋</span>First, what's your Discord Username?</h2>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" class="text-input" placeholder="e.g., username#1234" required>
                     </div>
+                    <button type="button" class="next-btn">Next</button>
                 </div>
-                <div class="visualizer-container">
-                    <div id="aspect-ratio-visualizer"></div>
-                </div>
-                <button type="button" class="next-btn">Continue</button>
-            </div>
 
-            <div class="form-step" data-step="2">
-                <h2><span class="icon">🖼️</span>And the Resolution?</h2>
-                <p class="step-subtitle">Price is not affected by this selection.</p>
-                <div class="option-picker" data-controls="resolution-value">
-                    <div class="option active" data-value="1920x1080">1920x1080</div>
-                    <div class="option" data-value="3840x2160">3840x2160 (4K)</div>
+                <div class="form-step" data-step="1">
+                    <h2><span class="icon">📐</span>Choose an Aspect Ratio.</h2>
+                    <div class="option-picker" data-controls="aspect-ratio-value"><div class="option active" data-value="16:9">16:9</div><div class="option" data-value="4:3">4:3</div><div class="option" data-value="1:1">1:1</div><div class="option" data-value="21:9">21:9</div></div>
+                    <div id="orientation-section"><h3>Orientation</h3><div class="option-picker" data-controls="orientation-value"><div class="option active" data-value="Landscape">Landscape</div><div class="option" data-value="Portrait">Portrait</div></div></div>
+                    <div class="visualizer-container"><div id="aspect-ratio-visualizer"></div></div>
+                    <button type="button" class="next-btn">Continue</button>
                 </div>
-                <button type="button" class="next-btn">Continue</button>
-            </div>
 
-            <div class="form-step" data-step="3">
-                <h2><span class="icon">📝</span>Describe your vision.</h2>
-                <div class="input-wrapper">
-                    <textarea id="description" name="description" class="text-input" placeholder="Mood, colors, scene..."></textarea>
+                <div class="form-step" data-step="2">
+                    <h2><span class="icon">🖼️</span>And the Resolution?</h2>
+                    <p class="step-subtitle">Price is not affected by this selection.</p>
+                    <div class="option-picker" data-controls="resolution-value"><div class="option active" data-value="1920x1080">1920x1080</div><div class="option" data-value="3840x2160">3840x2160 (4K)</div></div>
+                    <button type="button" class="next-btn">Continue</button>
                 </div>
-                <h2><span class="icon">📎</span>Add reference images. (Optional)</h2>
-                <div id="image-preview-container"></div>
-                <label for="reference-image" class="file-upload-label">Click to Upload</label>
-                <button type="submit" class="next-btn submit-btn" id="submit-button">Send Request</button>
-            </div>
-        </form>
+
+                <div class="form-step" data-step="3">
+                    <h2><span class="icon">📝</span>Describe your vision.</h2>
+                    <div class="input-wrapper"><textarea id="description" name="description" class="text-input" placeholder="Mood, colors, scene..."></textarea></div>
+                    <h2><span class="icon">📎</span>Add reference images. (Optional)</h2>
+                    <div id="image-preview-container"></div>
+                    <label for="reference-image" class="file-upload-label">Click to Upload</label>
+                    <button type="submit" class="next-btn submit-btn" id="submit-button">Send Request</button>
+                </div>
+            </form>
+        </div>
 
         <div id="confirmation-screen">
-            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
             <h2>Request Sent!</h2>
             <p>Your vision is on its way to the artist. You'll get a DM on Discord soon!</p>
         </div>
     </main>
 
     <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIFtz1SKI5zm-IQUJ1yNILX_CvT7yUAQg",
+      authDomain: "flyyingkittyyarrr.firebaseapp.com",
+      databaseURL: "https://flyyingkittyyarrr-default-rtdb.firebaseio.com",
+      projectId: "flyyingkittyyarrr",
+      storageBucket: "flyyingkittyyarrr.appspot.com",
+      messagingSenderId: "92004323057",
+      appId: "1:92004323057:web:af8a781dfd17e9d7e3a350",
+      measurementId: "G-NCL7SJC998"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    
     document.addEventListener('DOMContentLoaded', () => {
+        const loaderContainer = document.getElementById('loader-container');
+        const loginContainer = document.getElementById('login-container');
+        const formContainer = document.getElementById('form-container');
+        const bannedContainer = document.getElementById('banned-container');
+        const anonymousLoginBtn = document.getElementById('anonymous-login-btn');
+        const userIdentifierDisplay = document.getElementById('user-identifier');
+        
         const form = document.getElementById('render-form');
         const steps = Array.from(document.querySelectorAll('.form-step'));
         const nextButtons = document.querySelectorAll('.next-btn');
@@ -253,34 +231,68 @@
         const webhookUrl = "https://discord.com/api/webhooks/1395819518055551048/LQ7D-nj738XYJftNmtyvP5A6kyrnWFWZrgn0PIdALo3lLSmdZOnMCgQlYmc69yW_qxXj";
         let currentStep = 0;
         let uploadedFiles = [];
+        let userUID = null;
+        let userIdentifier = null;
 
-        // --- ENTER KEY FIX ---
-        form.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                // Prevent the default form submission on Enter press
-                event.preventDefault();
-                // Find the 'Next' button in the current active step and click it
-                const currentStepElement = steps[currentStep];
-                const nextButton = currentStepElement.querySelector('.next-btn');
-                if (nextButton) {
-                    nextButton.click();
+        const switchView = (activeView) => {
+            [loaderContainer, loginContainer, formContainer, bannedContainer].forEach(container => {
+                container.classList.remove('active');
+            });
+            activeView.classList.add('active');
+        };
+
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                try {
+                    await user.getIdToken(true);
+                    userUID = user.uid;
+                    userIdentifier = "User: ..."+user.uid.slice(-5);
+                    userIdentifierDisplay.textContent = userIdentifier;
+                    switchView(formContainer);
+                    showStep(0);
+                } catch (error) {
+                    if (error.code === 'auth/user-disabled') {
+                        switchView(bannedContainer);
+                    } else {
+                        console.error("Auth token check failed:", error);
+                        switchView(loginContainer);
+                    }
                 }
+            } else {
+                switchView(loginContainer);
             }
         });
-        // --- END OF FIX ---
+
+        anonymousLoginBtn.addEventListener('click', async () => {
+            anonymousLoginBtn.disabled = true;
+            anonymousLoginBtn.textContent = 'Connecting...';
+            try {
+                await auth.signInAnonymously();
+            } catch (error) {
+                console.error("Anonymous login failed:", error);
+                alert("Login failed. Please refresh the page and try again.");
+                anonymousLoginBtn.disabled = false;
+                anonymousLoginBtn.textContent = 'Login Anonymously';
+            }
+        });
+
+        form.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const currentStepElement = steps[currentStep];
+                const nextButton = currentStepElement.querySelector('.next-btn');
+                if (nextButton) nextButton.click();
+            }
+        });
 
         const showStep = (stepIndex) => {
+            currentStep = stepIndex;
             steps.forEach((step, index) => step.classList.toggle('active', index === stepIndex));
-            if (stepIndex === 1) {
-                updateVisualizer();
-            }
+            if (stepIndex === 1) updateVisualizer();
         };
 
         const goToNextStep = () => {
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                showStep(currentStep);
-            }
+            if (currentStep < steps.length - 1) showStep(currentStep + 1);
         };
         
         const updateVisualizer = () => {
@@ -290,20 +302,15 @@
             orientationSection.style.display = isSquare ? 'none' : 'block';
             const [w, h] = ratioValue.split(':').map(Number);
             let finalW = w, finalH = h;
-            if (!isSquare && orientationValue === 'Portrait') {
-                finalW = h;
-                finalH = w;
-            }
+            if (!isSquare && orientationValue === 'Portrait') { finalW = h; finalH = w; }
             const container = aspectRatioVisualizer.parentElement;
-            const containerW = container.clientWidth;
-            const containerH = container.clientHeight;
             let vizW, vizH;
-            if ((containerW / finalW) * finalH > containerH) {
-                vizH = containerH;
-                vizW = (containerH / finalH) * finalW;
+            if ((container.clientWidth / finalW) * finalH > container.clientHeight) {
+                vizH = container.clientHeight;
+                vizW = (container.clientHeight / finalH) * finalW;
             } else {
-                vizW = containerW;
-                vizH = (containerW / finalW) * finalH;
+                vizW = container.clientWidth;
+                vizH = (container.clientWidth / finalW) * finalH;
             }
             aspectRatioVisualizer.style.width = `${vizW}px`;
             aspectRatioVisualizer.style.height = `${vizH}px`;
@@ -312,6 +319,7 @@
         new ResizeObserver(updateVisualizer).observe(document.querySelector('.visualizer-container'));
         
         nextButtons.forEach(button => {
+            if (button.id === 'anonymous-login-btn') return;
             button.addEventListener('click', () => {
                 const currentStepElement = steps[currentStep];
                 const input = currentStepElement.querySelector('input[required]');
@@ -321,25 +329,18 @@
                     input.animate([{ transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 300, easing: 'ease-in-out' });
                     return;
                 }
-                if (input) {
-                    input.style.borderColor = '';
-                    input.style.boxShadow = '';
-                }
+                if (input) { input.style.borderColor = ''; input.style.boxShadow = ''; }
                 if (button.type !== 'submit') goToNextStep();
             });
         });
         
         optionPickers.forEach(picker => {
-            const options = picker.querySelectorAll('.option');
-            const hiddenInput = document.getElementById(picker.dataset.controls);
-            options.forEach(option => {
+            picker.querySelectorAll('.option').forEach(option => {
                 option.addEventListener('click', () => {
                     picker.querySelector('.option.active')?.classList.remove('active');
                     option.classList.add('active');
-                    hiddenInput.value = option.dataset.value;
-                    if (picker.dataset.controls === 'aspect-ratio-value' || picker.dataset.controls === 'orientation-value') {
-                        updateVisualizer();
-                    }
+                    document.getElementById(picker.dataset.controls).value = option.dataset.value;
+                    if (picker.dataset.controls.includes('aspect') || picker.dataset.controls.includes('orientation')) updateVisualizer();
                 });
             });
         });
@@ -357,39 +358,27 @@
                 removeBtn.className = 'remove-image-btn';
                 removeBtn.innerHTML = '×';
                 removeBtn.type = 'button';
-                removeBtn.onclick = () => {
-                    uploadedFiles.splice(index, 1);
-                    renderPreviews();
-                };
+                removeBtn.onclick = () => { uploadedFiles.splice(index, 1); renderPreviews(); };
                 previewItem.appendChild(img);
                 previewItem.appendChild(removeBtn);
                 imagePreviewContainer.appendChild(previewItem);
             });
         };
 
-        fileInput.addEventListener('change', () => {
-            uploadedFiles.push(...fileInput.files);
-            renderPreviews();
-            fileInput.value = '';
-        });
+        fileInput.addEventListener('change', () => { uploadedFiles.push(...fileInput.files); renderPreviews(); fileInput.value = ''; });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitButton = document.getElementById('submit-button');
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
-
             const formData = new FormData();
-            
             formData.append('username', document.getElementById('username').value);
             formData.append('aspect-ratio', document.getElementById('aspect-ratio-value').value);
             formData.append('orientation', document.getElementById('orientation-value').value);
             formData.append('resolution', document.getElementById('resolution-value').value);
             formData.append('description', document.getElementById('description').value);
-
-            uploadedFiles.forEach((file, index) => {
-                formData.append(`file${index}`, file, file.name);
-            });
+            uploadedFiles.forEach((file, index) => { formData.append(`file${index}`, file, file.name); });
 
             const payload = {
                 username: "Render Commission Bot",
@@ -399,7 +388,9 @@
                     color: 4032255,
                     timestamp: new Date().toISOString(),
                     fields: [
-                        { name: "👤 Discord User", value: `\`${formData.get('username')}\``, inline: true },
+                        { name: "👤 Discord User", value: `\`${formData.get('username')}\``, inline: false },
+                        { name: "🆔 User Identifier", value: `\`${userIdentifier}\``, inline: true },
+                        { name: "🔑 Firebase UID", value: `\`${userUID}\``, inline: false },
                         { name: "📐 Aspect Ratio", value: `\`${formData.get('aspect-ratio')}\``, inline: true },
                         { name: "🧭 Orientation", value: `\`${formData.get('aspect-ratio') === '1:1' ? 'N/A' : formData.get('orientation')}\``, inline: true },
                         { name: "🖼️ Resolution", value: `\`${formData.get('resolution')}\``, inline: false },
@@ -410,24 +401,15 @@
             };
             
             if (uploadedFiles.length > 0) {
-                const fileText = uploadedFiles.length > 1 ? `${uploadedFiles.length} files attached.` : `1 file attached.`;
-                payload.embeds[0].fields.push({ name: "📎 Reference Files", value: `See attached files below (${fileText})`});
+                payload.embeds[0].fields.push({ name: "📎 Reference Files", value: `See attached files below (${uploadedFiles.length})`});
             }
 
             formData.append('payload_json', JSON.stringify(payload));
 
             try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    body: formData,
-                });
-
+                const response = await fetch(webhookUrl, { method: 'POST', body: formData });
                 if (response.ok) {
-                    form.classList.add('fading-out');
-                    setTimeout(() => {
-                        form.style.display = 'none';
-                        document.getElementById('confirmation-screen').style.display = 'flex';
-                    }, 500);
+                    document.body.innerHTML = `<div id="confirmation-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: fadeIn 1s ease-in-out forwards;"><svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg><h2>Request Sent!</h2><p>Your vision is on its way to the artist. You'll get a DM on Discord soon!</p></div>`;
                 } else {
                     const errorData = await response.json();
                     alert(`Error: ${errorData.message || 'An unknown error occurred.'}`);
@@ -440,8 +422,6 @@
                 submitButton.textContent = 'Send Request';
             }
         });
-        
-        showStep(currentStep);
     });
     </script>
 </body>
