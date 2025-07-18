@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:03,419
+You are now viewing this tape because you have been selected.
+
+2
+00:00:04,040 --> 00:00:05,280
+This is not a mistake.
+
+3
+00:00:06,019 --> 00:00:07,620
+Participation is not optional.
+
+4
+00:00:08,300 --> 00:00:10,880
+You are about to begin a controlled evaluation.
+
+5
+00:00:11,580 --> 00:00:14,320
+The nature of this test will not be disclosed.
+
+6
+00:00:14,900 --> 00:00:16,859
+Understanding you is not required.
+
+7
+00:00:17,480 --> 00:00:22,260
+Completion is. From this point forward, your behavior will be observed.
+
+8
+00:00:22,780 --> 00:00:24,859
+Your responses will be analyzed.
+
+9
+00:00:27,239 --> 00:00:27,899
+Any deviation will be recorded. Your responses will be analyzed. Any deviation will be recorded.
+
+10
+00:00:34,759 --> 00:00:35,420
+You may experience discomfort, confusion, loss of time. These are expected outcomes.
